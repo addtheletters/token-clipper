@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {BaseCallbackContainer} from '../App'
+import {Layer} from '../App'
 import {ImageEffectControl, ImageEffect} from './ImageEffect'
 
 interface Props {
     size : number;
     ind : number;
     type: EffectType;
-    baseHandlerContainer?: BaseCallbackContainer;
+    callbackContainer: Layer;
     onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
 }
 
@@ -18,17 +18,13 @@ export interface Effect {
 }
 
 interface State {
-    // xoffset : number;
-    // yoffset : number;
-    // scale : number;
-    //rotation: number;
-    //src?: string;
     [x:string]: any; // lifted state from inner components
     basepixels?: Uint8ClampedArray; // (size * size * 4) length
 }
 
 export enum EffectType {
-    Image = 1,
+    Image = "image",
+    Mask = "mask",
 }
 
 function getEffect(et : EffectType) {
@@ -99,9 +95,7 @@ class EffectLayer extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        if (this.props.baseHandlerContainer) {
-            this.props.baseHandlerContainer.callback = this.handleBasePixelsChanged;
-        }
+        this.props.callbackContainer.callback = this.handleBasePixelsChanged;
         this.effect = getEffect(this.props.type);
         this.state = {
             ...this.effect.getFreshState(),
