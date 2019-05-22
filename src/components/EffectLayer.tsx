@@ -11,8 +11,9 @@ interface Props {
 }
 
 export interface Effect {
-    initEffect : (s:any) => void;
-    drawEffect : (s:any) => void;
+    name:string;
+    preDraw : (s:Sketcher) => void;
+    draw : (s:Sketcher) => void;
     getFreshState : ()=>{};
     getHandlers: (el:EffectLayer)=>any;
     getControlState: (el:EffectLayer)=>any;
@@ -38,11 +39,22 @@ function getEffect(et : EffectType) {
     }
 }
 
+export interface Sketcher extends p5 {
+    props : any;
+    state : any;
+    internal : any;
+    baseImg: p5.Image;
+}
+
 function getSketcher(parent : EffectLayer, effect : Effect) {
-    let sketcher = function (s : any) {
-        s.internal = { src: null, img: null };
+    let sketcher = function (s : Sketcher) {
         s.props = parent.props;
         s.state = parent.state;
+        s.internal = {}; // for use by effect
+
+        s.preload = function() {
+            s.baseImg = s.createImage(s.props.size, s.props.size);
+        }
 
         s.setup = function() {
             s.createCanvas(s.props.size, s.props.size);
@@ -52,37 +64,32 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             // re-fetch state.
             s.state = parent.state;
 
-            // if image src has changed, reload
-            if (s.state.src && s.state.src !== s.internal.src) {
-                effect.initEffect(s);
-            }
+            // initialize effect
+            effect.preDraw(s);
 
             // clear old canvas
             s.clear();
 
-            // apply base pixels from previous layer
+            // apply base pixels from previous layer to buffer image
             if (s.state.basepixels) {
-                s.loadPixels();
                 let psize = s.props.size * s.props.size * 4;
-                if (psize !== s.state.basepixels.length) {
-                    console.warn("base pixels don't match canvas size of " + parent.getCanvasID());
-                }
+                s.baseImg.loadPixels();
                 for (let i = 0; i < psize; i++) {
-                    s.pixels[i] = s.state.basepixels[i];
+                    s.baseImg.pixels[i] = s.state.basepixels[i];
                 }
-                s.updatePixels();
+                s.baseImg.updatePixels();
             }
         }
 
         s.draw = function() {
             preDraw();
 
-            effect.drawEffect(s);
+            effect.draw(s);
 
             // inform that new pixels are created
             if (parent.props.onNewOutput) {
                 s.loadPixels();
-                parent.onOutput(s.pixels);
+                parent.onOutput(Uint8ClampedArray.from(s.pixels));
             }
         }
     };
@@ -94,7 +101,7 @@ class EffectLayer extends React.Component<Props, State> {
     last_output?: Uint8ClampedArray;
     effect: Effect;
 
-    constructor(props: Props) {
+    constructor(props : Props) {
         super(props);
         this.props.callbackContainer.onNewBasePixels = this.handleBasePixelsChanged;
         this.effect = getEffect(this.props.type);
@@ -159,12 +166,11 @@ class EffectLayer extends React.Component<Props, State> {
     render() {
         return (
             <div className="effect-container" id={"effect-container"+this.props.ind}>
-                <div className="effect-left">
+                <div className="effect-title">{this.effect.name}</div>
+                <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>
                 </div>
-                <div className="effect-right">
-                    <ImageEffectControl control={this.effect.getControlState(this)} handlers={this.effect.getHandlers(this)}/>
-                </div>
+                <ImageEffectControl control={this.effect.getControlState(this)} handlers={this.effect.getHandlers(this)}/>
             </div>
         );
     }

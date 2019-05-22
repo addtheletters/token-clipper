@@ -4,7 +4,7 @@ import LayerAdder from './components/LayerAdder'
 import EffectLayer from './components/EffectLayer'
 import {EffectType} from './components/EffectLayer'
 
-const SIZE = 256;
+export const SIZE = 256;
 
 export interface Layer {
   type : EffectType;

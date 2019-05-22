@@ -38,30 +38,67 @@
 }
 
 .effect-list {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 50%;
-  margin: auto;
   padding: 10px;
   border: 1px solid blue;
+  max-width: 1000px;
+  margin: auto auto;
 }
 
 .effect-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
   background-color: rgba(240, 240, 240, 1);
-  padding: 15px;
-  margin: 5px;
+  padding: 5px;
+  margin: 5px auto;
+  width: 90%;
 }
 
-.effect-left {
-  float: left;
+.effect-title {
+  flex:initial;
+  padding: 10px;
+  font-size: calc(10px + 2vmin);
+}
+
+.effect-canvas {
+  flex: none;
   padding: 5px;
 }
 
-.effect-right {
-  float: right;
+.controls {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 5px;
+  font-size: calc(10px + 0.5vmin);
 }
 
+.controls-top {
+  flex:1 1;
+  padding: 10px 5px;
+}
+
+.controls-bottom {
+  flex:2 2;
+  padding: 10px 5px;
+}
+
+.source-select {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.source-select-type {
+  padding: 0px 10px;
+}
+
+.source-select-sub {
+  padding: 0px 10px;
+}
