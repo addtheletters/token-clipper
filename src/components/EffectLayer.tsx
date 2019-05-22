@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Layer} from '../App'
-import {ImageEffectControl, ImageEffect} from './ImageEffect'
+import ImageEffect from './ImageEffect'
+import ImageControls from './ImageControls'
 
 interface Props {
     size : number;
@@ -33,6 +34,9 @@ function getEffect(et : EffectType) {
     switch (et) {
         case EffectType.Image:
             return ImageEffect;
+        case EffectType.Mask:
+            
+            return ImageEffect;
         default:
             console.log("unknown effect " + et + ": defaulting to ImageEffect");
             return ImageEffect;
@@ -40,8 +44,8 @@ function getEffect(et : EffectType) {
 }
 
 export interface Sketcher extends p5 {
-    props : any;
-    state : any;
+    props : Props;
+    state : State;
     internal : any;
     baseImg: p5.Image;
 }
@@ -170,7 +174,7 @@ class EffectLayer extends React.Component<Props, State> {
                 <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>
                 </div>
-                <ImageEffectControl control={this.effect.getControlState(this)} handlers={this.effect.getHandlers(this)}/>
+                <ImageControls control={this.effect.getControlState(this)} handlers={this.effect.getHandlers(this)}/>
             </div>
         );
     }
