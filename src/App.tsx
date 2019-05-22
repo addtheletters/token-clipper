@@ -8,12 +8,10 @@ const SIZE = 256;
 
 export interface Layer {
   type : EffectType;
-  callback: (pixels : Uint8ClampedArray) => void;
   key : number;
+  onNewBasePixels: (pixels : Uint8ClampedArray) => void;
+  getLastResultPixels: () => Uint8ClampedArray | null;
 }
-
-// <EffectLayer type={EffectType.Image} size={SIZE} ind={0} callbackContainer={layers[0]} onNewOutput={handleNewOutput}></EffectLayer>
-// <EffectLayer type={EffectType.Image} size={SIZE} ind={1} callbackContainer={layers[1]} onNewOutput={handleNewOutput}></EffectLayer>
 
 interface State {
   layers : Array<Layer>;
@@ -21,6 +19,7 @@ interface State {
 
 class App extends React.Component<any,State> {
   freeKey : number = 0;
+  results : Array<Uint8ClampedArray> = [];
 
   constructor(props:any) {
     super(props);
@@ -28,21 +27,36 @@ class App extends React.Component<any,State> {
   }
 
   newLayer = (et : EffectType) => {
-    const newLayers = this.state.layers.concat({type:et, callback:()=>{}, key:this.freeKey});
+    let baseRequest : () => Uint8ClampedArray | null = () => null;
+    if (this.state.layers.length >= 1) {
+      console.log("base request for second layer");
+      let end = this.state.layers.length - 1;
+      baseRequest = () => {
+        return this.results[end];
+      };
+    }
+
+    const newLayers = this.state.layers.concat(
+        { type:et,
+          key:this.freeKey,
+          onNewBasePixels:()=>{},
+          getLastResultPixels: baseRequest,
+        }
+      );
     this.freeKey++;
+    this.results.push(new Uint8ClampedArray(SIZE * SIZE * 4));
     this.setState({ layers : newLayers });
   }
 
   handleNewOutput = (effectIndex : number, pixels : Uint8ClampedArray) => {
-    //console.log("effect " + effectIndex + " changed to " + pixels);
+    this.results[effectIndex] = pixels;
     if (effectIndex < this.state.layers.length - 1) {
-      this.state.layers[effectIndex+1].callback(pixels);
+      this.state.layers[effectIndex+1].onNewBasePixels(pixels);
     }
     return;
   }
 
   handleAddEffect = (et : EffectType) => {
-    console.log(et);
     this.newLayer(et);
   }
 
@@ -51,7 +65,7 @@ class App extends React.Component<any,State> {
   }
 
   componentDidMount() {
-    // initialize with two image layers, for testing
+    // initialize with one image layer
     this.newLayer(EffectType.Image);
   }
 

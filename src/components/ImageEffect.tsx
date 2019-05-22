@@ -63,7 +63,17 @@ export var ImageEffect : Effect = {
             }
         }
         return handlers;
-    }
+    },
+
+    getControlState : (el : EffectLayer) => {
+        let ctrl : ImageEffectState = {
+            xoffset: el.state.xoffset,
+            yoffset: el.state.yoffset,
+            scale: el.state.scale,
+            src: el.state.src,
+        }
+        return ctrl;
+    },
 }
 
 // since react doesn't like nested state, this will be spread into
@@ -75,12 +85,13 @@ interface ImageEffectState {
     src?: string;
 }
 
-export interface ImageEffectHandlers {
+interface ImageEffectHandlers {
     onSliderChange: (name:string, value:number) => void;
     onSourceChange: (url:string) => void;
 }
 
-interface Props extends ImageEffectState {
+interface Props {
+    control : ImageEffectState,
     handlers : ImageEffectHandlers,
 }
 
@@ -99,9 +110,9 @@ export class ImageEffectControl extends React.Component<Props> {
     }
 
     render() {
-        const xoffset_scaled = this.props.xoffset * INCS;
-        const yoffset_scaled = this.props.yoffset * INCS;
-        const scale_scaled = this.props.scale * INCS;
+        const xoffset_scaled = this.props.control.xoffset * INCS;
+        const yoffset_scaled = this.props.control.yoffset * INCS;
+        const scale_scaled = this.props.control.scale * INCS;
         return (
             <div>
                 <input type="file" accept="image/*" name="src"

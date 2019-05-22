@@ -15,6 +15,7 @@ export interface Effect {
     drawEffect : (s:any) => void;
     getFreshState : ()=>{};
     getHandlers: (el:EffectLayer)=>any;
+    getControlState: (el:EffectLayer)=>any;
 }
 
 interface State {
@@ -95,7 +96,7 @@ class EffectLayer extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        this.props.callbackContainer.callback = this.handleBasePixelsChanged;
+        this.props.callbackContainer.onNewBasePixels = this.handleBasePixelsChanged;
         this.effect = getEffect(this.props.type);
         this.state = {
             ...this.effect.getFreshState(),
@@ -138,6 +139,15 @@ class EffectLayer extends React.Component<Props, State> {
 
     componentDidMount() {
         this.canvas = new window.p5(getSketcher(this, this.effect), document.getElementById(this.getCanvasID()) as HTMLElement);
+        console.log("EffectLayer: mounted, requesting base pixels");
+        let bp = this.props.callbackContainer.getLastResultPixels();
+        if (bp) {
+            console.log("EffectLayer: base pixels got");
+            this.setState({ basepixels : bp });
+        }
+        else {
+            console.log("EffectLayer: no base pixels");
+        }
     }
 
     componentWillUnmount() {
@@ -153,11 +163,12 @@ class EffectLayer extends React.Component<Props, State> {
                     <div className="canvas-container" id={this.getCanvasID()}></div>
                 </div>
                 <div className="effect-right">
-                    <ImageEffectControl xoffset={this.state.xoffset} yoffset={this.state.yoffset} scale={this.state.scale} handlers={this.effect.getHandlers(this)}/>
+                    <ImageEffectControl control={this.effect.getControlState(this)} handlers={this.effect.getHandlers(this)}/>
                 </div>
             </div>
         );
     }
+    // xoffset={this.state.xoffset} yoffset={this.state.yoffset} scale={this.state.scale}
 }
 
 export default EffectLayer;
