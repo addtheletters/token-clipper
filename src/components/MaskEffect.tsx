@@ -1,90 +1,59 @@
-import * as React from 'react';
-import EffectLayer, {Effect, Sketcher} from './EffectLayer'
+import {Effect, Sketcher} from './EffectLayer'
+import ImageControls from './ImageControls'
+import ImageEffect from './ImageEffect'
 
-const INCS = 100; // number of increments per (0,1) interval for slider
-const MAX_SCALE = 5;
-
-// since react doesn't like nested state, this will be spread into
-// the state of EffectLayer.
-interface MaskEffectState {
-    xoffset : number;
-    yoffset : number;
-    scale : number;
-    src?: string;
-}
-
-interface MaskEffectHandlers {
-    onSliderChange: (name:string, value:number) => void;
-    onSourceChange: (url:string) => void;
-}
-
-interface Props {
-    control : MaskEffectState,
-    handlers : MaskEffectHandlers,
-}
-
-export var MaskEffect : Effect = {
+var MaskEffect : Effect = {
     name : "Mask",
+    control : ImageControls.controlFuncs,
+
+    preLoad : (s:Sketcher) => {
+        s.internal.mask = s.createImage(s.props.size, s.props.size);
+    },
 
     preDraw : (s:Sketcher) => {
-        
+        s.clear();
+
+        // load mask like any other image
+        ImageEffect.preDraw(s);
+
+        // when loaded, try to draw on blank and re-save as mask matching image size
+        if (s.internal.img) {
+            let imgw = s.internal.img.width, imgh = s.internal.img.height;
+            // draw
+            s.image(s.internal.img, 
+                (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
+                (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
+                s.state.scale * imgw,
+                s.state.scale * imgh);
+
+            // copy into mask buffer
+            let psize = s.props.size * s.props.size * 4;
+            s.loadPixels();
+            s.internal.mask.loadPixels();
+            for (let i = 0; i < psize; i++) {
+                s.internal.mask[i] = s.pixels[i];
+            }
+            s.baseImg.updatePixels();
+        }
+        s.clear();
     },
 
     draw : (s:Sketcher) => {
-        
-    },
-
-    getFreshState : () => {
-        return {};
-    },
-
-    getHandlers: (el:EffectLayer)=>{
-
-    },
-    getControlState: (el:EffectLayer) => {
-
-    },
-}
-
-export class MaskEffectControl extends React.Component<Props> {
-    handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.handlers.onSliderChange(event.target.name, parseFloat(event.target.value) / INCS);
-    }
-
-    handleSourceChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files != null && event.target.files.length > 0) {
-            this.props.handlers.onSourceChange(URL.createObjectURL(event.target.files[0]));
+        if (s.internal.img) {
+            // apply mask to base pixels
+            s.baseImg.mask(s.internal.mask);
         }
         else {
-            console.error("MaskEfectControl: file invalid");
+            // placeholder text since no image is loaded
+            s.textSize(s.state.scale * 10);
+            s.text("「 no mask\n" +
+                   "   (" + s.state.xoffset + "," + s.state.yoffset + ")\n" +
+                   "   x " + s.state.scale + "\t」",
+                s.props.size/2 + (s.state.xoffset * s.props.size), 
+                s.props.size/2 + (s.state.yoffset * s.props.size), 
+                200, 100);
         }
-    }
-
-    render() {
-        const xoffset_scaled = this.props.control.xoffset * INCS;
-        const yoffset_scaled = this.props.control.yoffset * INCS;
-        const scale_scaled = this.props.control.scale * INCS;
-        return (
-            <div>
-                <input type="file" accept="image/*" name="src"
-                    onChange={this.handleSourceChange}/>
-                <div>
-                  <div>X Offset</div>
-                  <input type="range" name="xoffset" value={xoffset_scaled}
-                         min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
-                <div>
-                  <div>Y Offset</div>
-                  <input type="range" name="yoffset" value={yoffset_scaled}
-                         min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
-                <div>
-                  <div>Scale</div>
-                  <input type="range" name="scale" value={scale_scaled}
-                         min={1} max={INCS*MAX_SCALE} onChange={this.handleSliderChange}/>
-                </div>
-            </div>
-        );
-    }
+    },
 }
 
+export default MaskEffect;

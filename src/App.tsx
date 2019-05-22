@@ -7,14 +7,14 @@ import {EffectType} from './components/EffectLayer'
 export const SIZE = 256;
 
 export interface Layer {
-  type : EffectType;
-  key : number;
-  onNewBasePixels: (pixels : Uint8ClampedArray) => void;
-  getLastResultPixels: () => Uint8ClampedArray | null;
+    type : EffectType;
+    key : number;
+    onNewBasePixels: (pixels : Uint8ClampedArray) => void;
+    getLastResultPixels: () => Uint8ClampedArray | null;
 }
 
 interface State {
-  layers : Array<Layer>;
+    layers : Array<Layer>;
 }
 
 class App extends React.Component<any,State> {

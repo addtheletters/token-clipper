@@ -1,5 +1,5 @@
 import * as React from 'react';
-import EffectLayer, {Effect, Sketcher} from './EffectLayer'
+import EffectLayer, {ControlComponent} from './EffectLayer'
 import SourceSelector from './SourceSelector'
 
 const INCS = 100; // number of increments per (0,1) interval for slider
@@ -25,6 +25,57 @@ interface Props {
 }
 
 class ImageControls extends React.Component<Props> {
+    static get controlFuncs () : ControlComponent {
+        return {
+            getFreshState : ImageControls.getFreshState,
+            getHandlers : ImageControls.getHandlers,
+            getControlState : ImageControls.getControlState,
+        };
+    };
+
+    static getFreshState () {
+        let state : ImageControlState = {
+            xoffset : 0,
+            yoffset : 0,
+            scale : 1,
+        };
+        return state;
+    };
+
+    static getHandlers (el : EffectLayer) {
+        let handlers : ImageControlHandlers = {
+            onSliderChange: (name : string, value : number) => {
+                if (name === "xoffset") {
+                    el.setState({ xoffset:value });
+                }
+                else if (name === "yoffset") {
+                    el.setState({ yoffset:value });
+                }
+                else if (name === "scale") {
+                    el.setState({ scale:value});
+                }
+                else {
+                    console.log("ImageEffect: unknown slider change " + name);
+                }
+            },
+
+            onSourceChange: (url: string) => {
+                el.setState({ src:url });
+            }
+        }
+        return handlers;
+    };
+
+    static getControlState (el : EffectLayer) {
+        let ctrl : ImageControlState = {
+            xoffset: el.state.xoffset,
+            yoffset: el.state.yoffset,
+            scale: el.state.scale,
+            src: el.state.src,
+        }
+        return ctrl;
+    };
+
     handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.props.handlers.onSliderChange(event.target.name, parseFloat(event.target.value) / INCS);
     }

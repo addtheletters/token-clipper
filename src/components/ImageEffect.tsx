@@ -1,10 +1,13 @@
-import * as React from 'react';
-import EffectLayer, {Effect, Sketcher} from './EffectLayer'
-import SourceSelector from './SourceSelector'
-import {ImageControlState, ImageControlHandlers} from './ImageControls'
+import {Effect, Sketcher} from './EffectLayer'
+import ImageControls from './ImageControls'
 
 var ImageEffect : Effect = {
     name : "Image",
+    control : ImageControls.controlFuncs,
+
+    preLoad : () => {
+        // nothing to load
+    },
 
     preDraw : (s : Sketcher) => {
         // if image src has changed, reload
@@ -16,6 +19,9 @@ var ImageEffect : Effect = {
                 s.internal.img = img;
             });
         }
+
+        // clear canvas
+        s.clear();
     },
 
     draw : (s : Sketcher) => {
@@ -23,6 +29,7 @@ var ImageEffect : Effect = {
         s.image(s.baseImg, 0, 0);
 
         if (s.internal.img) {
+            // draw image
             let imgw = s.internal.img.width, imgh = s.internal.img.height;
             s.image(s.internal.img, 
                 (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
@@ -40,49 +47,6 @@ var ImageEffect : Effect = {
                 s.props.size/2 + (s.state.yoffset * s.props.size), 
                 200, 100);
         }
-    },
-
-    getFreshState : () => {
-        let state : ImageControlState = {
-            xoffset : 0,
-            yoffset : 0,
-            scale : 1,
-        };
-        return state;
-    },
-
-    getHandlers : (el : EffectLayer) => {
-        let handlers : ImageControlHandlers = {
-            onSliderChange: (name : string, value : number) => {
-                if (name === "xoffset") {
-                    el.setState({ xoffset:value });
-                }
-                else if (name === "yoffset") {
-                    el.setState({ yoffset:value });
-                }
-                else if (name === "scale") {
-                    el.setState({ scale:value});
-                }
-                else {
-                    console.log("ImageEffect: unknown slider change " + name);
-                }
-            },
-
-            onSourceChange: (url: string) => {
-                el.setState({ src:url });
-            }
-        }
-        return handlers;
-    },
-
-    getControlState : (el : EffectLayer) => {
-        let ctrl : ImageControlState = {
-            xoffset: el.state.xoffset,
-            yoffset: el.state.yoffset,
-            scale: el.state.scale,
-            src: el.state.src,
-        }
-        return ctrl;
     },
 }
 

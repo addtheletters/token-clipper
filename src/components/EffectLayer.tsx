@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Layer} from '../App'
 import ImageEffect from './ImageEffect'
+import MaskEffect from './MaskEffect'
 import ImageControls from './ImageControls'
 
 interface Props {
@@ -11,13 +12,18 @@ interface Props {
     onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
 }
 
-export interface Effect {
-    name:string;
-    preDraw : (s:Sketcher) => void;
-    draw : (s:Sketcher) => void;
+export interface ControlComponent {
     getFreshState : ()=>{};
     getHandlers: (el:EffectLayer)=>any;
     getControlState: (el:EffectLayer)=>any;
+}
+
+export interface Effect {
+    name : string;
+    control : ControlComponent; // ControlComponent, but static interfaces don't exist
+    preLoad : (s:Sketcher) => void;
+    preDraw : (s:Sketcher) => void;
+    draw : (s:Sketcher) => void;
 }
 
 interface State {
@@ -35,8 +41,8 @@ function getEffect(et : EffectType) {
         case EffectType.Image:
             return ImageEffect;
         case EffectType.Mask:
-            
-            return ImageEffect;
+            console.log("mask effect requested");
+            return MaskEffect;
         default:
             console.log("unknown effect " + et + ": defaulting to ImageEffect");
             return ImageEffect;
@@ -58,6 +64,9 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
 
         s.preload = function() {
             s.baseImg = s.createImage(s.props.size, s.props.size);
+
+            // one-time effect initialization
+            effect.preLoad(s);
         }
 
         s.setup = function() {
@@ -68,12 +77,6 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             // re-fetch state.
             s.state = parent.state;
 
-            // initialize effect
-            effect.preDraw(s);
-
-            // clear old canvas
-            s.clear();
-
             // apply base pixels from previous layer to buffer image
             if (s.state.basepixels) {
                 let psize = s.props.size * s.props.size * 4;
@@ -83,11 +86,15 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
                 }
                 s.baseImg.updatePixels();
             }
+
+            // prepare to draw this frame
+            effect.preDraw(s);
         }
 
         s.draw = function() {
             preDraw();
 
+            // draw this frame
             effect.draw(s);
 
             // inform that new pixels are created
@@ -110,7 +117,7 @@ class EffectLayer extends React.Component<Props, State> {
         this.props.callbackContainer.onNewBasePixels = this.handleBasePixelsChanged;
         this.effect = getEffect(this.props.type);
         this.state = {
-            ...this.effect.getFreshState(),
+            ...this.effect.control.getFreshState(),
         };
         this.canvas = undefined;
     }
@@ -174,7 +181,7 @@ class EffectLayer extends React.Component<Props, State> {
                 <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>
                 </div>
-                <ImageControls control={this.effect.getControlState(this)} handlers={this.effect.getHandlers(this)}/>
+                <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
             </div>
         );
     }
