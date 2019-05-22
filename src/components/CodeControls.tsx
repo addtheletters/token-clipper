@@ -56,7 +56,7 @@ class CodeControls extends React.Component<Props> {
         return (
             <div className="controls">
                 <div className="controls-top">
-                    s = p5; // (your p5 painter. go wild!)
+                    // (TBD is your p5 painter object. go wild!)
                 </div>
                 <div className="controls-bottom">
                     <textarea value={this.props.control.codeText} onChange={this.handleTextFieldChanged}></textarea>
