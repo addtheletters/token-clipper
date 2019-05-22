@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {Layer} from '../App'
-import ImageEffect from './ImageEffect'
-import MaskEffect from './MaskEffect'
-import PaintEffect from './PaintEffect'
-import ImageControls from './ImageControls'
+import {Layer} from '../App';
+import ImageEffect from './ImageEffect';
+import MaskEffect from './MaskEffect';
+import PaintEffect from './PaintEffect';
+import ImageControls from './ImageControls';
+import CodeControls from './CodeControls';
 
 interface Props {
     size : number;
@@ -187,6 +188,9 @@ class EffectLayer extends React.Component<Props, State> {
                     );
                 break;
             case EffectType.Paint:
+                controls = (
+                    <CodeControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
+                    );
                 break;
             default:
                 console.error("EffectLayer: can't render controls for unknown effect type");

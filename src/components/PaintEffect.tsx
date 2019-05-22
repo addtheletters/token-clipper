@@ -1,16 +1,13 @@
-import EffectLayer, {Effect, Sketcher} from './EffectLayer'
+import {Effect, Sketcher} from './EffectLayer';
+import CodeControls from './CodeControls';
 
 // Paint Effect.
-// Allows user to input p5 commands to draw.
+// Allows user to input p5 commands to draw, or choose from some presets.
 // Dangerous evals? probably.
 
 var PaintEffect : Effect = {
     name : "Paint",
-    control : {
-        getFreshState: ()=>{},
-        getHandlers: (el:EffectLayer)=>{},
-        getControlState: (el:EffectLayer)=>{},
-    },
+    control : CodeControls.controlFuncs,
 
     preLoad : (s:Sketcher) => {
         

@@ -78,7 +78,7 @@ class ImageControls extends React.Component<Props> {
 
     handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.props.handlers.onSliderChange(event.target.name, parseFloat(event.target.value) / INCS);
-    }
+    };
 
     handleSourceChange = this.props.handlers.onSourceChange;
 
