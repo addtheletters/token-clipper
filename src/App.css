@@ -32,17 +32,18 @@
   }
 }
 
-.canvas-container {
-  margin: 5px;
-  border: 1px dotted;
+canvas {
+  box-shadow: 3px 5px 10px 1px gray;
+  border: 1px solid gray;
 }
+
 
 .effect-list {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  border: 1px solid blue;
+  /*border: 1px solid blue;*/
   max-width: 1000px;
   margin: auto auto;
 }
@@ -56,6 +57,7 @@
   padding: 5px;
   margin: 5px auto;
   width: 90%;
+  box-shadow: 1px 1px 4px 1px gray;
 }
 
 .effect-title {
@@ -63,6 +65,7 @@
   padding: 10px;
   font-weight: bold;
   font-size: calc(15px + 1vmin);
+  width: 10%;
 }
 
 .effect-canvas {
