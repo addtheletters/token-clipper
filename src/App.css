@@ -103,3 +103,7 @@
 .source-select-sub {
   padding: 0px 10px;
 }
+
+.img-hidden {
+  display: none;
+}

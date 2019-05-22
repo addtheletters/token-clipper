@@ -8,6 +8,7 @@ var MaskEffect : Effect = {
 
     preLoad : (s:Sketcher) => {
         s.internal.mask = s.createImage(s.props.size, s.props.size);
+        s.internal.text = "no mask";
     },
 
     preDraw : (s:Sketcher) => {
@@ -31,9 +32,9 @@ var MaskEffect : Effect = {
             s.loadPixels();
             s.internal.mask.loadPixels();
             for (let i = 0; i < psize; i++) {
-                s.internal.mask[i] = s.pixels[i];
+                s.internal.mask.pixels[i] = s.pixels[i];
             }
-            s.baseImg.updatePixels();
+            s.internal.mask.updatePixels();
         }
         s.clear();
     },
@@ -42,11 +43,16 @@ var MaskEffect : Effect = {
         if (s.internal.img) {
             // apply mask to base pixels
             s.baseImg.mask(s.internal.mask);
+
+            // draw to canvas
+            s.image(s.baseImg, 0, 0);
         }
         else {
+            s.image(s.baseImg, 0, 0);
+
             // placeholder text since no image is loaded
             s.textSize(s.state.scale * 10);
-            s.text("「 no mask\n" +
+            s.text("「" + s.internal.text + "\n" +
                    "   (" + s.state.xoffset + "," + s.state.yoffset + ")\n" +
                    "   x " + s.state.scale + "\t」",
                 s.props.size/2 + (s.state.xoffset * s.props.size), 
