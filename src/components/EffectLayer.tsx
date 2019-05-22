@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Layer} from '../App'
 import ImageEffect from './ImageEffect'
 import MaskEffect from './MaskEffect'
+import PaintEffect from './PaintEffect'
 import ImageControls from './ImageControls'
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export interface ControlComponent {
-    getFreshState : ()=>{};
+    getFreshState: ()=>any;
     getHandlers: (el:EffectLayer)=>any;
     getControlState: (el:EffectLayer)=>any;
 }
@@ -21,9 +22,9 @@ export interface ControlComponent {
 export interface Effect {
     name : string;
     control : ControlComponent; // ControlComponent, but static interfaces don't exist
-    preLoad : (s:Sketcher) => void;
-    preDraw : (s:Sketcher) => void;
-    draw : (s:Sketcher) => void;
+    preLoad : (s:Sketcher) => void; // one-time initialization
+    preDraw : (s:Sketcher) => void; // prepare to draw; usually clear canvas
+    draw : (s:Sketcher) => void;    // draw the effect to the canvas
 }
 
 interface State {
@@ -34,6 +35,7 @@ interface State {
 export enum EffectType {
     Image = "image",
     Mask = "mask",
+    Paint = "paint",
 }
 
 function getEffect(et : EffectType) {
@@ -41,8 +43,9 @@ function getEffect(et : EffectType) {
         case EffectType.Image:
             return ImageEffect;
         case EffectType.Mask:
-            console.log("mask effect requested");
             return MaskEffect;
+        case EffectType.Paint:
+            return PaintEffect;
         default:
             console.log("unknown effect " + et + ": defaulting to ImageEffect");
             return ImageEffect;
@@ -175,13 +178,28 @@ class EffectLayer extends React.Component<Props, State> {
     }
 
     render() {
+        let controls = <div className="controls"></div>;
+        switch (this.props.type) {
+            case EffectType.Image:
+            case EffectType.Mask:
+                controls = (
+                    <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
+                    );
+                break;
+            case EffectType.Paint:
+                break;
+            default:
+                console.error("EffectLayer: can't render controls for unknown effect type");
+                break;
+        }
+
         return (
             <div className="effect-container" id={"effect-container"+this.props.ind}>
                 <div className="effect-title">{this.effect.name}</div>
                 <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>
                 </div>
-                <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
+                {controls}
             </div>
         );
     }
