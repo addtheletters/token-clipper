@@ -35,12 +35,23 @@ class SourceSelector extends React.Component<Props, State> {
         };
     }
 
+    handleURLInputChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value && event.target.value.length > 0) {
+            try {
+                this.props.onSourceChange((new URL(event.target.value)).toString());
+            }
+            catch (err){
+                console.log("SourceSelector: could not interpret URL");
+            }
+        }
+    }
+
     handleFileInputChange = (event : React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files != null && event.target.files.length > 0) {
             this.props.onSourceChange(URL.createObjectURL(event.target.files[0]));
         }
         else {
-            console.error("ImageEfectControl: file invalid");
+            console.error("SourceSelector: file invalid");
         }
     }
 
@@ -57,10 +68,17 @@ class SourceSelector extends React.Component<Props, State> {
         let subSelector;
         switch (this.state.selectedType) {
             case SourceType.LocalFile:
-                subSelector = (<input type="file" accept="image/*" name="src"
-                        onChange={this.handleFileInputChange}/>);
+                subSelector = (
+                    <input type="file" accept="image/*" name="src-file"
+                        onChange={this.handleFileInputChange}/>
+                    );
                 break;
             case SourceType.URL:
+                subSelector = (
+                    <input type="url" name="src-url"
+                        onChange={this.handleURLInputChange}/>
+                    );
+                break;
             case SourceType.BuiltIn:
             default:
                 subSelector = (<div>unknown source type {this.state.selectedType}</div>);

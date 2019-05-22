@@ -61,7 +61,8 @@
 .effect-title {
   flex:initial;
   padding: 10px;
-  font-size: calc(10px + 2vmin);
+  font-weight: bold;
+  font-size: calc(15px + 1vmin);
 }
 
 .effect-canvas {
