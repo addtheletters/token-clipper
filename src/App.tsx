@@ -29,7 +29,6 @@ class App extends React.Component<any,State> {
   newLayer = (et : EffectType) => {
     let baseRequest : () => Uint8ClampedArray | null = () => null;
     if (this.state.layers.length >= 1) {
-      console.log("base request for second layer");
       let end = this.state.layers.length - 1;
       baseRequest = () => {
         return this.results[end];

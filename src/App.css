@@ -83,11 +83,13 @@ canvas {
 }
 
 .controls {
-  flex: auto;
+  flex: 1;
+  align-self: stretch;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   padding: 5px;
   font-size: calc(10px + 0.5vmin);
 }
@@ -100,6 +102,27 @@ canvas {
 .controls-bottom {
   flex:2 2;
   padding: 10px 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls-label {
+  flex:1;
+}
+
+.controls-info {
+  flex:5;
+}
+
+.controls-area {
+  flex:15;
+  padding: 10px 10px;
+  min-width: 256px;
+}
+
+.code-area {
+  width: 80%;
+  height: 95%;
 }
 
 .source-select {
