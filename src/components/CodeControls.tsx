@@ -1,6 +1,6 @@
 import * as React from 'react';
 import EffectLayer, {ControlComponent} from './EffectLayer'
-import {getUserInstanceName} from './PaintEffect'
+import {getUserInstanceName} from './CodeEffect'
 
 // since react doesn't like nested state, this will be spread into
 // the state of EffectLayer.

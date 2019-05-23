@@ -40,7 +40,6 @@ var ImageEffect : Effect = {
                         },
                         (err) => {
                             console.warn("CORS proxy failed.");
-                            s.internal.text = ALT_TEXT;
                         }
                     );
                 }

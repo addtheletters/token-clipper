@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Layer} from '../App';
 import ImageEffect from './ImageEffect';
 import MaskEffect from './MaskEffect';
-import PaintEffect from './PaintEffect';
+import CodeEffect from './CodeEffect';
 import ImageControls from './ImageControls';
 import CodeControls from './CodeControls';
 
@@ -37,7 +37,7 @@ interface State {
 export enum EffectType {
     Image = "image",
     Mask = "mask",
-    Paint = "paint",
+    Code = "code",
 }
 
 function getEffect(et : EffectType) {
@@ -46,10 +46,10 @@ function getEffect(et : EffectType) {
             return ImageEffect;
         case EffectType.Mask:
             return MaskEffect;
-        case EffectType.Paint:
-            return PaintEffect;
+        case EffectType.Code:
+            return CodeEffect;
         default:
-            console.log("unknown effect " + et + ": defaulting to ImageEffect");
+            console.warn("tried to get unknown effect " + et + ": defaulting to ImageEffect");
             return ImageEffect;
     }
 }
@@ -193,7 +193,7 @@ class EffectLayer extends React.Component<Props, State> {
                     <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
                     );
                 break;
-            case EffectType.Paint:
+            case EffectType.Code:
                 controls = (
                     <CodeControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
                     );
@@ -206,7 +206,8 @@ class EffectLayer extends React.Component<Props, State> {
         return (
             <div className="effect-container" id={"effect-container"+this.props.ind}>
                 <div className="effect-title">
-                    {this.effect.name}
+                    <div>[{this.props.ind + 1}]</div>
+                    <div>{this.effect.name}</div>
                     <button className="effect-remove-button" onClick={this.handleRemoveButtonPressed}>remove</button>
                 </div>
                 <div className="effect-canvas">

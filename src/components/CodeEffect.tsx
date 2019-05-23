@@ -66,8 +66,8 @@ function runInWrapper(__code__: string, __instance__: p5) {
     return __wrapper__;
 }
 
-var PaintEffect : Effect = {
-    name : "Paint",
+var CodeEffect : Effect = {
+    name : "Code",
     control : CodeControls.controlFuncs,
 
     preLoad : (s:Sketcher, layer:EffectLayer) => {
@@ -111,4 +111,4 @@ var PaintEffect : Effect = {
     },
 }
 
-export default PaintEffect;
+export default CodeEffect;
