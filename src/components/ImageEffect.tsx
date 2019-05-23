@@ -53,11 +53,10 @@ var ImageEffect : Effect = {
     draw : (s : Sketcher) => {
         // draw base pixels to canvas
         //s.image(s.baseImg, 0, 0);
-        if (s.baseImg) {
-            s.baseImg.loadPixels();
+        if (s.props.basePixels) {
             s.loadPixels();
             for (let i = 0; i < s.props.tokenSize * s.props.tokenSize * 4; i++) {
-                s.pixels[i] = s.baseImg.pixels[i];
+                s.pixels[i] = s.props.basePixels[i];
             }
             s.updatePixels();
         }

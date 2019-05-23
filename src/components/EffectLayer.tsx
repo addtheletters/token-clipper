@@ -13,6 +13,7 @@ interface Props {
     callbackContainer: Layer;
     onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
     onRemove?: (eindex: number) => void;
+    basePixels?: Uint8ClampedArray;  // (size * size * 4) length
 }
 
 export interface ControlComponent {
@@ -31,7 +32,6 @@ export interface Effect {
 
 interface State {
     [x:string]: any; // lifted state from inner components
-    basepixels?: Uint8ClampedArray; // (size * size * 4) length
 }
 
 export enum EffectType {
@@ -58,7 +58,6 @@ export interface Sketcher extends p5 {
     props : Props;
     state : State;
     internal : any;
-    baseImg: p5.Image;
 }
 
 function getSketcher(parent : EffectLayer, effect : Effect) {
@@ -66,7 +65,6 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
         s.props = parent.props;
         s.state = parent.state;
         s.internal = {}; // for use by effect
-        s.baseImg = s.createImage(s.props.tokenSize, s.props.tokenSize);
 
         s.preload = function() {
             s.createCanvas(s.props.tokenSize, s.props.tokenSize);
@@ -82,23 +80,6 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
         function preDraw() {
             // re-fetch state.
             s.state = parent.state;
-
-            // apply base pixels from previous layer to buffer image
-            if (s.state.basepixels) {
-                let psize = s.props.tokenSize * s.props.tokenSize * 4;
-                s.baseImg.loadPixels();
-                if (s.baseImg.pixels.length !== psize) {
-                    console.log("base image size doesn't match psize");
-                }
-                for (let i = 0; i < psize; i++) {
-                    s.baseImg.pixels[i] = s.state.basepixels[i];
-                    if (i === psize-1) {
-                        console.log(psize);
-                        console.log("last pixel assigned " + s.baseImg.pixels[i]);
-                    }
-                }
-                s.baseImg.updatePixels();
-            }
 
             // prepare to draw this frame
             effect.preDraw(s);
@@ -141,7 +122,7 @@ class EffectLayer extends React.Component<Props, State> {
     }
 
     handleBasePixelsChanged = (pixels : Uint8ClampedArray) => {
-        this.setState({ basepixels: pixels });
+        //this.setState({ basepixels: pixels });
     }
 
     handleRemoveButtonPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -151,25 +132,28 @@ class EffectLayer extends React.Component<Props, State> {
     }
 
     onOutput = (pixels : Uint8ClampedArray) => {
-        if (!this.props.onNewOutput) {
-            return;
-        }
         // only callback (trigger other effect components' state change)
         // if comparing pixels has a result
+        let psize = this.props.tokenSize * this.props.tokenSize * 4;
+
         let differs : boolean = false;
         if (!this.last_output || pixels.length !== this.last_output.length) {
+            //console.log(this.props.ind + " DIFFERS (length)" + pixels.length);
             differs = true;
         }
         else {
-            for (let i = 0; i < pixels.length; i++) {
+            for (let i = 0; i < psize; i++) {
                 if (this.last_output[i] !== pixels[i]) {
+                    //console.log(this.props.ind + " DIFFERS (COMPARISON)");
                     differs = true;
                     break;
                 }
             }
         }
         if (differs) {
-            this.props.onNewOutput(this.props.ind, pixels);
+            if (this.props.onNewOutput) {
+                this.props.onNewOutput(this.props.ind, pixels);
+            }
             this.last_output = pixels;
         }
         return;
@@ -183,7 +167,7 @@ class EffectLayer extends React.Component<Props, State> {
         this.canvas = new window.p5(getSketcher(this, this.effect), document.getElementById(this.getCanvasID()) as HTMLElement);
         let bp = this.props.callbackContainer.getLastResultPixels();
         if (bp) {
-            this.setState({ basepixels : bp });
+            //this.setState({ basepixels : bp });
         }
         else {
             console.log("EffectLayer: no initial base pixels");

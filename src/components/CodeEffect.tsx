@@ -85,7 +85,14 @@ var CodeEffect : Effect = {
 
     draw : (s:Sketcher) => {
         // draw base pixels
-        s.image(s.baseImg, 0, 0);
+        //s.image(s.baseImg, 0, 0);
+        if (s.props.basePixels) {
+            s.loadPixels();
+            for (let i = 0; i < s.props.tokenSize * s.props.tokenSize * 4; i++) {
+                s.pixels[i] = s.props.basePixels[i];
+            }
+            s.updatePixels();
+        }
 
         // try to run user painting code
         // only try run if valid already valid or code has changed
