@@ -6,6 +6,7 @@ interface Props {
 
 interface State {
     selectedType : SourceType;
+    selectedBuiltIn : string;
 }
 
 enum SourceType {
@@ -25,13 +26,24 @@ function prettySource(s : SourceType): string {
         default:
             return "unknown source type";
     }
-} 
+}
+
+interface BuiltIns {
+    [x:string] : string;
+}
+
+const BUILT_INS : BuiltIns = {
+    "Mask Circle (radius 128px)"    : "assets/circle-alpha-512.png",
+    "Mask Square (side 256px)"      : "assets/square-alpha-512.png",
+    "Yuratzu of Pain (167 x 173px)" : "assets/yuratzu.png",
+};
 
 class SourceSelector extends React.Component<Props, State> {
     constructor(props : Props) {
         super(props);
         this.state = {
-            selectedType: SourceType.LocalFile
+            selectedType: SourceType.LocalFile,
+            selectedBuiltIn : Object.keys(BUILT_INS)[0],
         };
     }
 
@@ -55,8 +67,22 @@ class SourceSelector extends React.Component<Props, State> {
         }
     }
 
+    handleBuiltInChange = (event : React.ChangeEvent<HTMLSelectElement>) => {
+        if (event.target.value in BUILT_INS) {
+            this.setState({selectedBuiltIn : event.target.value});
+            this.props.onSourceChange(BUILT_INS[event.target.value]);
+        }
+        else {
+            console.error("SourceSelector: built-in doesn't exist: " + event.target.value);
+        }
+    };
+
     handleSourceTypeChange = (event : React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({selectedType:event.target.value as SourceType});
+        if (event.target.value === SourceType.BuiltIn) {
+            // load selected built-in immediately
+            this.props.onSourceChange(BUILT_INS[this.state.selectedBuiltIn]);
+        }
     }
 
     render() {
@@ -80,6 +106,16 @@ class SourceSelector extends React.Component<Props, State> {
                     );
                 break;
             case SourceType.BuiltIn:
+                let subList = Object.keys(BUILT_INS).map(k => {
+                    return (<option value={k} key={k}>{k}</option>);
+                });
+                subSelector = (
+                    <select name="src-builtin" value={this.state.selectedBuiltIn}
+                        onChange={this.handleBuiltInChange}>
+                        {subList}
+                    </select>
+                    );
+                break;
             default:
                 subSelector = (<div>unknown source type {this.state.selectedType}</div>);
                 break;
