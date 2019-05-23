@@ -52,14 +52,22 @@ var ImageEffect : Effect = {
 
     draw : (s : Sketcher) => {
         // draw base pixels to canvas
-        s.image(s.baseImg, 0, 0);
+        //s.image(s.baseImg, 0, 0);
+        if (s.baseImg) {
+            s.baseImg.loadPixels();
+            s.loadPixels();
+            for (let i = 0; i < s.props.tokenSize * s.props.tokenSize * 4; i++) {
+                s.pixels[i] = s.baseImg.pixels[i];
+            }
+            s.updatePixels();
+        }
 
         if (s.internal.img) {
             // draw image
             let imgw = s.internal.img.width, imgh = s.internal.img.height;
             s.image(s.internal.img, 
-                (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
-                (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
+                (s.props.tokenSize - s.state.scale*imgw)/2 + s.state.xoffset * s.props.tokenSize,
+                (s.props.tokenSize - s.state.scale*imgh)/2 + s.state.yoffset * s.props.tokenSize,
                 s.state.scale * imgw,
                 s.state.scale * imgh);
         }
@@ -69,8 +77,8 @@ var ImageEffect : Effect = {
             s.text("「" + s.internal.text + "\n" +
                    "   (" + s.state.xoffset + "," + s.state.yoffset + ")\n" +
                    "   x " + s.state.scale + "\t」",
-                s.props.size/2 + (s.state.xoffset * s.props.size), 
-                s.props.size/2 + (s.state.yoffset * s.props.size), 
+                s.props.tokenSize/2 + (s.state.xoffset * s.props.tokenSize), 
+                s.props.tokenSize/2 + (s.state.yoffset * s.props.tokenSize), 
                 200, 100);
         }
     },

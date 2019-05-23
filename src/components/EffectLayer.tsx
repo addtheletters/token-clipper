@@ -7,9 +7,9 @@ import ImageControls from './ImageControls';
 import CodeControls from './CodeControls';
 
 interface Props {
-    size : number;
     ind : number;
-    type: EffectType;
+    tokenSize : number;
+    effectType: EffectType;
     callbackContainer: Layer;
     onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
     onRemove?: (eindex: number) => void;
@@ -66,16 +66,17 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
         s.props = parent.props;
         s.state = parent.state;
         s.internal = {}; // for use by effect
+        s.baseImg = s.createImage(s.props.tokenSize, s.props.tokenSize);
 
         s.preload = function() {
-            s.baseImg = s.createImage(s.props.size, s.props.size);
+            s.createCanvas(s.props.tokenSize, s.props.tokenSize);
 
             // one-time effect initialization
             effect.preLoad(s, parent);
         }
 
         s.setup = function() {
-            s.createCanvas(s.props.size, s.props.size);
+            s.createCanvas(s.props.tokenSize, s.props.tokenSize);
         }
 
         function preDraw() {
@@ -84,10 +85,17 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
 
             // apply base pixels from previous layer to buffer image
             if (s.state.basepixels) {
-                let psize = s.props.size * s.props.size * 4;
+                let psize = s.props.tokenSize * s.props.tokenSize * 4;
                 s.baseImg.loadPixels();
+                if (s.baseImg.pixels.length !== psize) {
+                    console.log("base image size doesn't match psize");
+                }
                 for (let i = 0; i < psize; i++) {
                     s.baseImg.pixels[i] = s.state.basepixels[i];
+                    if (i === psize-1) {
+                        console.log(psize);
+                        console.log("last pixel assigned " + s.baseImg.pixels[i]);
+                    }
                 }
                 s.baseImg.updatePixels();
             }
@@ -105,7 +113,12 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             // inform that new pixels are created
             if (parent.props.onNewOutput) {
                 s.loadPixels();
-                parent.onOutput(Uint8ClampedArray.from(s.pixels));
+                let psize = s.props.tokenSize * s.props.tokenSize * 4;
+                let pcopy : Uint8ClampedArray = new Uint8ClampedArray(psize);
+                for (let i = 0; i < psize; i++) {
+                    pcopy[i] = s.pixels[i];
+                }
+                parent.onOutput(pcopy);
             }
         }
     };
@@ -120,7 +133,7 @@ class EffectLayer extends React.Component<Props, State> {
     constructor(props : Props) {
         super(props);
         this.props.callbackContainer.onNewBasePixels = this.handleBasePixelsChanged;
-        this.effect = getEffect(this.props.type);
+        this.effect = getEffect(this.props.effectType);
         this.state = {
             ...this.effect.control.getFreshState(),
         };
@@ -186,7 +199,7 @@ class EffectLayer extends React.Component<Props, State> {
 
     render() {
         let controls = <div className="controls"></div>;
-        switch (this.props.type) {
+        switch (this.props.effectType) {
             case EffectType.Image:
             case EffectType.Mask:
                 controls = (

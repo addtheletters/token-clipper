@@ -7,7 +7,7 @@ var MaskEffect : Effect = {
     control : ImageControls.controlFuncs,
 
     preLoad : (s:Sketcher) => {
-        s.internal.mask = s.createImage(s.props.size, s.props.size);
+        s.internal.mask = s.createImage(s.props.tokenSize, s.props.tokenSize);
         s.internal.text = "no mask";
     },
 
@@ -22,13 +22,13 @@ var MaskEffect : Effect = {
             let imgw = s.internal.img.width, imgh = s.internal.img.height;
             // draw
             s.image(s.internal.img, 
-                (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
-                (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
+                (s.props.tokenSize - s.state.scale*imgw)/2 + s.state.xoffset * s.props.tokenSize,
+                (s.props.tokenSize - s.state.scale*imgh)/2 + s.state.yoffset * s.props.tokenSize,
                 s.state.scale * imgw,
                 s.state.scale * imgh);
 
             // copy into mask buffer
-            let psize = s.props.size * s.props.size * 4;
+            let psize = s.props.tokenSize * s.props.tokenSize * 4;
             s.loadPixels();
             s.internal.mask.loadPixels();
             for (let i = 0; i < psize; i++) {
@@ -55,8 +55,8 @@ var MaskEffect : Effect = {
             s.text("「" + s.internal.text + "\n" +
                    "   (" + s.state.xoffset + "," + s.state.yoffset + ")\n" +
                    "   x " + s.state.scale + "\t」",
-                s.props.size/2 + (s.state.xoffset * s.props.size), 
-                s.props.size/2 + (s.state.yoffset * s.props.size), 
+                s.props.tokenSize/2 + (s.state.xoffset * s.props.tokenSize), 
+                s.props.tokenSize/2 + (s.state.yoffset * s.props.tokenSize), 
                 200, 100);
         }
     },

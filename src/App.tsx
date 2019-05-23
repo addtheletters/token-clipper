@@ -4,10 +4,10 @@ import LayerAdder from './components/LayerAdder'
 import EffectLayer from './components/EffectLayer'
 import {EffectType} from './components/EffectLayer'
 
-export const SIZE = 256;
+export const TOKEN_SIZE = 256;
 
 export interface Layer {
-    type : EffectType;
+    effectType : EffectType;
     key : number;
     onNewBasePixels: (pixels : Uint8ClampedArray) => void; // empty until an EffectLayer constructor supplies it
     getLastResultPixels: () => Uint8ClampedArray | null;   // hacky implementation, only call once during layer creation
@@ -40,22 +40,21 @@ class App extends React.Component<any,State> {
       };
     }
 
-    const newLayers = this.state.layers.concat(
-        { type:et,
+    const newLayers = this.state.layers.concat({
           key:this.freeKey,
+          effectType:et,
           onNewBasePixels:()=>{},
           getLastResultPixels: baseRequest,
-        }
-      );
+       });
     this.freeKey++;
-    this.results.push(new Uint8ClampedArray(SIZE * SIZE * 4));
+    this.results.push(new Uint8ClampedArray(TOKEN_SIZE * TOKEN_SIZE * 4));
     this.setState({ layers : newLayers });
   }
 
   handleNewOutput = (effectIndex : number, pixels : Uint8ClampedArray) => {
     this.results[effectIndex] = pixels;
     if (effectIndex < this.state.layers.length - 1) {
-      this.state.layers[effectIndex+1].onNewBasePixels(pixels);
+      this.state.layers[effectIndex+1].onNewBasePixels(this.results[effectIndex]);
     }
     return;
   }
@@ -74,10 +73,11 @@ class App extends React.Component<any,State> {
         this.state.layers[effectIndex+1].onNewBasePixels(this.results[effectIndex-1]);
       }
       else {
-        this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(SIZE * SIZE * 4));
+        this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(TOKEN_SIZE * TOKEN_SIZE * 4));
       }
     }
     const newLayers = this.state.layers.slice(0,effectIndex).concat(this.state.layers.slice(effectIndex+1));
+    this.results = this.results.splice(effectIndex, 1);
     this.setState({ layers : newLayers });
   }
 
@@ -87,14 +87,14 @@ class App extends React.Component<any,State> {
 
   render() {
     const layerList = this.state.layers.map((layer, index) => 
-        <EffectLayer key={layer.key} type={layer.type} size={SIZE} ind={index}
+        <EffectLayer key={layer.key} effectType={layer.effectType} tokenSize={TOKEN_SIZE} ind={index}
             callbackContainer={layer}
             onNewOutput={this.handleNewOutput}
             onRemove={this.handleRemoveEffect}/>
       );
     return (
       <div className="App">
-          <h1>Token Clipper</h1>
+          <h1>Token Clipper (test 1)</h1>
           <hr/>
           <LayerAdder onAdd={this.handleAddEffect}/>
           <hr/>
