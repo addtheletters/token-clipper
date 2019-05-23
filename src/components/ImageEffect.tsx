@@ -2,7 +2,10 @@ import {Effect, Sketcher} from './EffectLayer'
 import ImageControls from './ImageControls'
 
 const ALT_TEXT = "load failed\n"
-                 + "   (CORS insecure?)";
+                 + "   (CORS not allowed?)";
+
+// server that can apply the Access-Control-Allow-Origin header
+const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 
 var ImageEffect : Effect = {
     name : "Image",
@@ -17,36 +20,29 @@ var ImageEffect : Effect = {
         if (s.state.src && s.state.src !== s.internal.src) {
             s.internal.src = s.state.src;
             s.internal.img = null;
+
+            let tmpsrc = s.state.src.trim();
+
             // these functions don't support Promises yet :(
-            s.loadImage(s.state.src, (img : p5.Image) => {
+            s.loadImage(tmpsrc, (img : p5.Image) => {
                 s.internal.img = img;
             },
             (err) => {
-                if (err) {
-                    console.log("error loading image " + s.internal.src);
-                    s.internal.text = ALT_TEXT;
-            //         // These lines allow us to try and reload as unsafe.
-            //         // However, once we do this we can't read and modify the canvas
-            //         // with loadPixels for security reasons.
-            //         // const htmlImage : any = err.target;
-            //         // if (!anyerr.crossOrigin) {
-            //         //     console.log("could not reload.");
-            //         //     return;
-            //         // }
-            //         // anyerr.crossOrigin = null;
-            //         // anyerr.src = anyerr.src; // needed to trigger reload in some browsers
-            //         // // see discussion:
-            //         // // https://forum.processing.org/two/discussion/11608/i-can-t-display-images-dynamically-loaded-from-web-with-p5-js-always-a-cross-domain-issue
+                s.internal.text = ALT_TEXT;
 
-            //         // if failed, try createImg (DOM function, more lenient cross-origin)
-            //         // then drawing to the canvas from that? this may still dirty the canvas
-            //         // s.createImg(s.state.src, ALT_TEXT, (htmlImg : p5.Element) => {
-            //         //     htmlImg.addClass("img-hidden");
-            //             // clear canvas
-            //             // copy image to canvas
-            //             // save canvas as internal img
-            //             // clear canvas
-            //         //});
+                if (CORS_PROXY_URL) {
+                    // if we failed to load, try to fetch image through a CORS-friendly proxy
+                    console.log("ImageEffect: load failed, attempting via proxy " + CORS_PROXY_URL);
+                    s.loadImage(CORS_PROXY_URL + tmpsrc,
+                        (img : p5.Image) => {
+                            console.log("retreived image.");
+                            s.internal.img = img;
+                        },
+                        (err) => {
+                            console.warn("CORS proxy failed.");
+                            s.internal.text = ALT_TEXT;
+                        }
+                    );
                 }
             });
         }

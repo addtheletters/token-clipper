@@ -66,7 +66,8 @@ class App extends React.Component<any,State> {
 
   handleRemoveEffect = (effectIndex : number) => {
     if (effectIndex < 0 || effectIndex >= this.state.layers.length) {
-      console.log("can't remove effect at bad index " + effectIndex);
+      console.error("can't remove effect at bad index " + effectIndex);
+      return;
     }
     if (effectIndex < this.state.layers.length - 1) {
       if (effectIndex > 0) {
@@ -81,7 +82,7 @@ class App extends React.Component<any,State> {
   }
 
   componentDidMount() {
-    //this.newLayer(EffectType.Paint);
+    this.newLayer(EffectType.Image);
   }
 
   render() {

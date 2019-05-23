@@ -125,6 +125,10 @@ canvas {
   height: 95%;
 }
 
+.controls-toggle {
+  flex:1;
+}
+
 .source-select {
   display: flex;
   flex-direction: row;
