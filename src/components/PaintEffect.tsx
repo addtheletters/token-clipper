@@ -1,4 +1,4 @@
-import {Effect, Sketcher} from './EffectLayer';
+import EffectLayer, {Effect, Sketcher} from './EffectLayer';
 import CodeControls from './CodeControls';
 
 // Paint Effect.
@@ -7,6 +7,11 @@ import CodeControls from './CodeControls';
 
 // time-out for code execution
 const TIME_LIMIT : number = 500;
+const USER_CODE_INSTANCE_NAME : string = "pfive";
+
+export function getUserInstanceName() {
+    return USER_CODE_INSTANCE_NAME;
+}
 
 interface SketchWrapper {
     timeExpired: boolean;
@@ -42,24 +47,22 @@ function getP5InstanceWrapper(instance: p5) : SketchWrapper {
 // throws an error if so.
 function runInWrapper(__code__: string, __instance__: p5) {
     let __wrapper__ = getP5InstanceWrapper(__instance__);
-    (
-        function() {
-            //eval("let " + USER_CODE_INSTANCE_NAME + " = __wrapper__.proxy;");
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            var pfive = __wrapper__.proxy;
-            try {
-                // eslint-disable-next-line no-eval
-                eval(__code__);
-            }
-            catch (err) {
-                window.clearTimeout(__wrapper__.timerHandle);
-                console.log("throwing up error");
-                // toss error up
-                throw err;
-            }
-            return;
-        }
-    )();
+    try {
+        // This is extremely dangerous.
+        // Instead, could try interpreting each line as an individual p5 function call?
+        // It would make this much less powerful, but whatever;
+        // this isn't intended for complex drawing anyway.
+
+        // eslint-disable-next-line no-new-func
+        Function(USER_CODE_INSTANCE_NAME,
+            '"use strict";' +
+            '{;' + __code__ + ';}')(__wrapper__.proxy);
+    }
+    catch (err) {
+        window.clearTimeout(__wrapper__.timerHandle);
+        console.log("PaintEffect: eval failed, throwing up error");
+        throw err; // toss error up to be caught in draw()
+    }
     return __wrapper__;
 }
 
@@ -67,9 +70,13 @@ var PaintEffect : Effect = {
     name : "Paint",
     control : CodeControls.controlFuncs,
 
-    preLoad : (s:Sketcher) => {
+    preLoad : (s:Sketcher, layer:EffectLayer) => {
         s.internal.oldCode = "";
         s.internal.noError = false;
+
+        s.internal.handleError = function(errorString : string) {
+            layer.setState({ errorText : errorString });
+        };
     },
 
     preDraw : (s:Sketcher) => {
@@ -93,11 +100,13 @@ var PaintEffect : Effect = {
                     let wrapper = runInWrapper(s.state.codeText, s);
                     window.clearTimeout(wrapper.timerHandle);
                     s.internal.codeValid = true;
+                    s.internal.handleError("no errors! :)");
                 }
                 catch (err) {
                     s.internal.codeValid = false;
                     console.log("PaintEffect: code eval error:");
                     console.log(err);
+                    s.internal.handleError(err.message);
                 }
             }
             s.internal.oldCode = s.state.codeText;

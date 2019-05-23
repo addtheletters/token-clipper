@@ -1,10 +1,12 @@
 import * as React from 'react';
 import EffectLayer, {ControlComponent} from './EffectLayer'
+import {getUserInstanceName} from './PaintEffect'
 
 // since react doesn't like nested state, this will be spread into
 // the state of EffectLayer.
 export interface CodeControlState {
     codeText : string;
+    errorText : string;
 }
 
 export interface CodeControlHandlers {
@@ -28,6 +30,7 @@ class CodeControls extends React.Component<Props> {
     static getFreshState () {
         let state : CodeControlState = {
             codeText : "",
+            errorText : "",
         };
         return state;
     };
@@ -36,7 +39,7 @@ class CodeControls extends React.Component<Props> {
         let handlers : CodeControlHandlers = {
             onCodeChanged: (code: string) => {
                 el.setState({ codeText: code });
-            }
+            },
         };
         return handlers;
     };
@@ -44,6 +47,7 @@ class CodeControls extends React.Component<Props> {
     static getControlState (el : EffectLayer) {
         let ctrl : CodeControlState = {
             codeText : el.state.codeText,
+            errorText: el.state.errorText,
         };
         return ctrl;
     };
@@ -56,7 +60,7 @@ class CodeControls extends React.Component<Props> {
         return (
             <div className="controls">
                 <div className="controls-label">
-                    // (`pfive` is your p5 painter object. go wild!)
+                    `{getUserInstanceName()}` is your p5 instance.
                 </div>
                 <div className="controls-area">
                     <textarea className="code-area"
@@ -64,7 +68,7 @@ class CodeControls extends React.Component<Props> {
                             onChange={this.handleTextFieldChanged}></textarea>
                 </div>
                 <div className="controls-info">
-                    // yup good job!
+                    {this.props.control.errorText}
                 </div>
             </div>
         );

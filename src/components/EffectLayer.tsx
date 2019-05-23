@@ -23,7 +23,7 @@ export interface ControlComponent {
 export interface Effect {
     name : string;
     control : ControlComponent; // ControlComponent, but static interfaces don't exist
-    preLoad : (s:Sketcher) => void; // one-time initialization
+    preLoad : (s:Sketcher, layer:EffectLayer) => void; // one-time initialization
     preDraw : (s:Sketcher) => void; // prepare to draw; usually clear canvas
     draw : (s:Sketcher) => void;    // draw the effect to the canvas
 }
@@ -70,7 +70,7 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             s.baseImg = s.createImage(s.props.size, s.props.size);
 
             // one-time effect initialization
-            effect.preLoad(s);
+            effect.preLoad(s, parent);
         }
 
         s.setup = function() {

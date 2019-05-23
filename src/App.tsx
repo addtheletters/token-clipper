@@ -64,8 +64,7 @@ class App extends React.Component<any,State> {
   }
 
   componentDidMount() {
-    // initialize with one image layer
-    this.newLayer(EffectType.Image);
+    //this.newLayer(EffectType.Paint);
   }
 
   render() {
