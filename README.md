@@ -1,6 +1,6 @@
 # token-clipper
 
-A web app that makes it easy to layer together images and effects.
+A web app that makes it easy to layer together images and effects. Live: https://addtheletters.github.io/token-clipper/
 
 Built on [node.js](https://nodejs.org/en/). Uses [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [p5](http://p5js.org/).
 
