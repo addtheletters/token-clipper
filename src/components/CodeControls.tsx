@@ -30,7 +30,7 @@ class CodeControls extends React.Component<Props> {
     static getFreshState () {
         let state : CodeControlState = {
             codeText : "",
-            errorText : "",
+            errorText : "-",
         };
         return state;
     };
@@ -60,15 +60,15 @@ class CodeControls extends React.Component<Props> {
         return (
             <div className="controls">
                 <div className="controls-label">
-                    `{getUserInstanceName()}` is your p5 instance.
+                    instance name: `{getUserInstanceName()}`
+                </div>
+                <div className="controls-info">
+                    {this.props.control.errorText}
                 </div>
                 <div className="controls-area">
                     <textarea className="code-area"
                             value={this.props.control.codeText}
                             onChange={this.handleTextFieldChanged}></textarea>
-                </div>
-                <div className="controls-info">
-                    {this.props.control.errorText}
                 </div>
             </div>
         );

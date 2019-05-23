@@ -48,8 +48,8 @@ function getP5InstanceWrapper(instance: p5) : SketchWrapper {
 function runInWrapper(__code__: string, __instance__: p5) {
     let __wrapper__ = getP5InstanceWrapper(__instance__);
     try {
-        // This is extremely dangerous.
-        // Instead, could try interpreting each line as an individual p5 function call?
+        // eval is dangerous.
+        // Instead, we could try interpreting each line as an individual p5 function call?
         // It would make this much less powerful, but whatever;
         // this isn't intended for complex drawing anyway.
 
@@ -60,7 +60,7 @@ function runInWrapper(__code__: string, __instance__: p5) {
     }
     catch (err) {
         window.clearTimeout(__wrapper__.timerHandle);
-        console.log("PaintEffect: eval failed, throwing up error");
+        //console.log("PaintEffect: eval failed, throwing up error");
         throw err; // toss error up to be caught in draw()
     }
     return __wrapper__;
@@ -87,11 +87,7 @@ var PaintEffect : Effect = {
         // draw base pixels
         s.image(s.baseImg, 0, 0);
 
-        // paint some stuff
-        //let halfsize = s.props.size/2;
-        //s.circle(halfsize, halfsize, halfsize * 3/2);
-        //pfive.circle(100, 100, 100 * 3/2);
-
+        // try to run user painting code
         // only try run if valid already valid or code has changed
         if (s.state.codeText !== s.internal.oldCode || s.internal.codeValid) {
             // only run if we have code
@@ -104,10 +100,11 @@ var PaintEffect : Effect = {
                 }
                 catch (err) {
                     s.internal.codeValid = false;
-                    console.log("PaintEffect: code eval error:");
-                    console.log(err);
                     s.internal.handleError(err.message);
                 }
+            }
+            else {
+                s.internal.handleError("-");
             }
             s.internal.oldCode = s.state.codeText;
         }

@@ -9,8 +9,8 @@ export const SIZE = 256;
 export interface Layer {
     type : EffectType;
     key : number;
-    onNewBasePixels: (pixels : Uint8ClampedArray) => void;
-    getLastResultPixels: () => Uint8ClampedArray | null;
+    onNewBasePixels: (pixels : Uint8ClampedArray) => void; // empty until an EffectLayer constructor supplies it
+    getLastResultPixels: () => Uint8ClampedArray | null;   // hacky implementation, only call once during layer creation
 }
 
 interface State {
@@ -28,6 +28,11 @@ class App extends React.Component<any,State> {
 
   newLayer = (et : EffectType) => {
     let baseRequest : () => Uint8ClampedArray | null = () => null;
+
+    // when adding a new layer, this is a hacky way of getting
+    // the most recent result from the previously final layer.
+    // trying to call this function again after some layer removals
+    // have been performed will fail. this should probably be replaced.
     if (this.state.layers.length >= 1) {
       let end = this.state.layers.length - 1;
       baseRequest = () => {
@@ -59,8 +64,15 @@ class App extends React.Component<any,State> {
     this.newLayer(et);
   }
 
-  handleRemoveEffect = (ind : number) => {
-    console.log("effect removal not yet implemented");
+  handleRemoveEffect = (effectIndex : number) => {
+    if (effectIndex < 0 || effectIndex >= this.state.layers.length) {
+      console.log("can't remove effect at bad index " + effectIndex);
+    }
+    if (effectIndex < this.state.layers.length - 1) {
+      this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(SIZE * SIZE * 4));
+    }
+    const newLayers = this.state.layers.slice(0,effectIndex).concat(this.state.layers.slice(effectIndex+1));
+    this.setState({ layers : newLayers });
   }
 
   componentDidMount() {
@@ -69,7 +81,10 @@ class App extends React.Component<any,State> {
 
   render() {
     const layerList = this.state.layers.map((layer, index) => 
-        <EffectLayer type={layer.type} size={SIZE} ind={index} callbackContainer={layer} onNewOutput={this.handleNewOutput} key={layer.key}></EffectLayer>
+        <EffectLayer key={layer.key} type={layer.type} size={SIZE} ind={index}
+            callbackContainer={layer}
+            onNewOutput={this.handleNewOutput}
+            onRemove={this.handleRemoveEffect}/>
       );
     return (
       <div className="App">

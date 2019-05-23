@@ -12,6 +12,7 @@ interface Props {
     type: EffectType;
     callbackContainer: Layer;
     onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
+    onRemove?: (eindex: number) => void;
 }
 
 export interface ControlComponent {
@@ -130,6 +131,12 @@ class EffectLayer extends React.Component<Props, State> {
         this.setState({ basepixels: pixels });
     }
 
+    handleRemoveButtonPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (this.props.onRemove) {
+            this.props.onRemove(this.props.ind);
+        }
+    }
+
     onOutput = (pixels : Uint8ClampedArray) => {
         if (!this.props.onNewOutput) {
             return;
@@ -173,6 +180,7 @@ class EffectLayer extends React.Component<Props, State> {
     }
 
     componentWillUnmount() {
+        //console.log("EffectLayer: unmounting");
         if (this.canvas) {
             this.canvas.remove();
         }
@@ -199,7 +207,10 @@ class EffectLayer extends React.Component<Props, State> {
 
         return (
             <div className="effect-container" id={"effect-container"+this.props.ind}>
-                <div className="effect-title">{this.effect.name}</div>
+                <div className="effect-title">
+                    {this.effect.name}
+                    <button className="effect-remove-button" onClick={this.handleRemoveButtonPressed}>remove</button>
+                </div>
                 <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>
                 </div>
