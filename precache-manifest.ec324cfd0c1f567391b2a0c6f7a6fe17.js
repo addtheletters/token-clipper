@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "fd65865d3563efffa6e2a847b20be49e",
+    "revision": "d41e69f78a32f8a52175f46e1e7b924e",
     "url": "/token-clipper/index.html"
   },
   {
-    "revision": "50d2b7fb789ab4fa798b",
+    "revision": "6e2ef1004add8399f74f",
     "url": "/token-clipper/static/css/main.fdcf4de8.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/token-clipper/static/js/2.dc155f86.chunk.js"
   },
   {
-    "revision": "50d2b7fb789ab4fa798b",
-    "url": "/token-clipper/static/js/main.67898f59.chunk.js"
+    "revision": "6e2ef1004add8399f74f",
+    "url": "/token-clipper/static/js/main.cb5e1a1a.chunk.js"
   },
   {
     "revision": "1b1b62d88d1898130d60",
