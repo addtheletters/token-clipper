@@ -168,14 +168,12 @@ class EffectLayer extends React.Component<Props, State> {
 
     componentDidMount() {
         this.canvas = new window.p5(getSketcher(this, this.effect), document.getElementById(this.getCanvasID()) as HTMLElement);
-        console.log("EffectLayer: mounted, requesting base pixels");
         let bp = this.props.callbackContainer.getLastResultPixels();
         if (bp) {
-            console.log("EffectLayer: base pixels got");
             this.setState({ basepixels : bp });
         }
         else {
-            console.log("EffectLayer: no base pixels");
+            console.log("EffectLayer: no initial base pixels");
         }
     }
 

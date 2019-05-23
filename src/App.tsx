@@ -69,7 +69,12 @@ class App extends React.Component<any,State> {
       console.log("can't remove effect at bad index " + effectIndex);
     }
     if (effectIndex < this.state.layers.length - 1) {
-      this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(SIZE * SIZE * 4));
+      if (effectIndex > 0) {
+        this.state.layers[effectIndex+1].onNewBasePixels(this.results[effectIndex-1]);
+      }
+      else {
+        this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(SIZE * SIZE * 4));
+      }
     }
     const newLayers = this.state.layers.slice(0,effectIndex).concat(this.state.layers.slice(effectIndex+1));
     this.setState({ layers : newLayers });
