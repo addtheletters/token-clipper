@@ -57,7 +57,11 @@ function getEffect(et : EffectType) {
 export interface Sketcher extends p5 {
     props : Props;
     state : State;
-    internal : any;
+    internal : {
+        display?: p5.Renderer; // visible canvas
+        buffer?: p5.Graphics & p5.p5InstanceExtensions;  // hidden, for drawing at accurate scale
+        [x:string]: any;
+    };
     baseImg: p5.Image;
 }
 
@@ -65,7 +69,11 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
     let sketcher = function (s : Sketcher) {
         s.props = parent.props;
         s.state = parent.state;
-        s.internal = {}; // for use by effect
+        // for use by effect
+        s.internal = {
+            display : undefined,
+            buffer : undefined,
+        };
 
         s.preload = function() {
             s.baseImg = s.createImage(s.props.size, s.props.size);
@@ -75,7 +83,11 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
         }
 
         s.setup = function() {
-            s.createCanvas(s.props.size, s.props.size);
+            s.internal.display = s.createCanvas(s.props.size, s.props.size);
+            s.internal.buffer = (s.createGraphics(s.props.size, s.props.size) as p5.Graphics & p5.p5InstanceExtensions);
+
+            console.log(s.internal.display);
+            console.log(s.internal.buffer);
         }
 
         function preDraw() {
@@ -99,13 +111,18 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
         s.draw = function() {
             preDraw();
 
-            // draw this frame
+            // draw this frame to buffer
             effect.draw(s);
 
-            // inform that new pixels are created
-            if (parent.props.onNewOutput) {
-                s.loadPixels();
-                parent.onOutput(Uint8ClampedArray.from(s.pixels));
+            if (s.internal.buffer) {
+                // draw buffer to display
+                s.image(s.internal.buffer, 0, 0);
+
+                // inform that new pixels are created
+                if (parent.props.onNewOutput) {
+                    s.internal.buffer.loadPixels();
+                    parent.onOutput(Uint8ClampedArray.from(s.internal.buffer.pixels));
+                }
             }
         }
     };
@@ -168,6 +185,7 @@ class EffectLayer extends React.Component<Props, State> {
 
     componentDidMount() {
         this.canvas = new window.p5(getSketcher(this, this.effect), document.getElementById(this.getCanvasID()) as HTMLElement);
+        console.log(this.canvas);
         let bp = this.props.callbackContainer.getLastResultPixels();
         if (bp) {
             this.setState({ basepixels : bp });

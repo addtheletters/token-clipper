@@ -6,7 +6,7 @@ import CodeControls from './CodeControls';
 // Dangerous evals? probably.
 
 // time-out for code execution
-const TIME_LIMIT : number = 500;
+const TIME_LIMIT_MS : number = 500;
 const USER_CODE_INSTANCE_NAME : string = "pfive";
 
 export function getUserInstanceName() {
@@ -29,12 +29,12 @@ function getP5InstanceWrapper(instance: p5) : SketchWrapper {
         function(w : SketchWrapper) {
             console.log("PaintEffect: Painting code execution time expired.");
             w.timeExpired = true;
-        }, TIME_LIMIT, wrapper);
+        }, TIME_LIMIT_MS, wrapper);
     wrapper.proxy = new Proxy(instance,
     {
         get: function(target : any, property, receiver) {
             if (wrapper.timeExpired) {
-                throw EvalError("Code execution time for painting expired (" + TIME_LIMIT + " ms).");
+                throw EvalError("Code execution time for painting expired (" + TIME_LIMIT_MS + " ms).");
             }
             return target[property];
         },

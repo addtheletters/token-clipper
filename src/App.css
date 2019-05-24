@@ -70,11 +70,10 @@ canvas {
 }
 
 .effect-title {
-  flex:initial;
+  flex:1;
   padding: 10px;
   font-weight: bold;
   font-size: calc(25px);
-  width: 10%;
 }
 
 .effect-canvas {
@@ -83,9 +82,7 @@ canvas {
 }
 
 .controls {
-  flex: 1;
-  align-self: stretch;
-
+  flex: 3;
   display: flex;
   flex-direction: column;
   justify-content: center;
