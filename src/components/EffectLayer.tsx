@@ -75,6 +75,7 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
         }
 
         s.setup = function() {
+            s.pixelDensity(1);
             s.createCanvas(s.props.size, s.props.size);
         }
 
