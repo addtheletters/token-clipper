@@ -31,8 +31,16 @@ var MaskEffect : Effect = {
             let psize = s.props.size * s.props.size * 4;
             s.loadPixels();
             s.internal.mask.loadPixels();
-            for (let i = 0; i < psize; i++) {
-                s.internal.mask.pixels[i] = s.pixels[i];
+            if (!s.state.invert) {
+                for (let i = 0; i < psize; i++) {
+                    s.internal.mask.pixels[i] = s.pixels[i];
+                }
+            }
+            else {
+                // inverted; mask transparency flipped.
+                for (let i = 0; i < psize; i++) {
+                    s.internal.mask.pixels[i] = 255 - s.pixels[i];
+                }
             }
             s.internal.mask.updatePixels();
         }

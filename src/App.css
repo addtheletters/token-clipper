@@ -91,7 +91,7 @@ canvas {
   justify-content: center;
   align-items: stretch;
   padding: 5px;
-  font-size: calc(10px + 0.5vmin);
+  font-size: calc(15px + 0.2vmin);
 }
 
 .controls-top {
@@ -108,6 +108,7 @@ canvas {
 
 .controls-label {
   flex:1;
+  text-align: right;
 }
 
 .controls-info {
@@ -118,6 +119,21 @@ canvas {
   flex:15;
   padding: 10px 10px;
   min-width: 256px;
+}
+
+.controls-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls-label {
+  padding: 5px;
+}
+
+.control {
+  flex: 1;
 }
 
 .code-area {

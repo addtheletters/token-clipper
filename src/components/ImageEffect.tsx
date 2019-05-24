@@ -50,8 +50,10 @@ var ImageEffect : Effect = {
     },
 
     draw : (s : Sketcher) => {
-        // draw base pixels to canvas
-        s.image(s.baseImg, 0, 0);
+        if (!s.state.invert) {
+            // draw base pixels to canvas
+            s.image(s.baseImg, 0, 0);
+        }
 
         if (s.internal.img) {
             // draw image
@@ -71,6 +73,11 @@ var ImageEffect : Effect = {
                 s.props.size/2 + (s.state.xoffset * s.props.size), 
                 s.props.size/2 + (s.state.yoffset * s.props.size), 
                 200, 100);
+        }
+
+        if (s.state.invert) {
+            // inverted. image drawn behind, now draw base in front
+            s.image(s.baseImg, 0, 0);
         }
     },
 }

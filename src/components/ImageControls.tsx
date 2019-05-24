@@ -12,10 +12,12 @@ export interface ImageControlState {
     yoffset : number;
     scale : number;
     src?: string;
+    invert : boolean;
 }
 
 export interface ImageControlHandlers {
     onSliderChange: (name:string, value:number) => void;
+    onInvertChange: (value:boolean) => void;
     onSourceChange: (url:string) => void;
 }
 
@@ -40,6 +42,7 @@ class ImageControls extends React.Component<Props> {
             xoffset : 0,
             yoffset : 0,
             scale : 1,
+            invert : false,
         };
         return state;
     };
@@ -61,6 +64,10 @@ class ImageControls extends React.Component<Props> {
                 }
             },
 
+            onInvertChange: (value: boolean) => {
+                el.setState({ invert:value });
+            },
+
             onSourceChange: (url: string) => {
                 el.setState({ src:url });
             }
@@ -74,6 +81,7 @@ class ImageControls extends React.Component<Props> {
             yoffset: el.state.yoffset,
             scale: el.state.scale,
             src: el.state.src,
+            invert: el.state.invert,
         }
         return ctrl;
     };
@@ -82,31 +90,51 @@ class ImageControls extends React.Component<Props> {
         this.props.handlers.onSliderChange(event.target.name, parseFloat(event.target.value) / INCS);
     };
 
+    handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.props.handlers.onInvertChange(event.target.checked);
+    };
+
     handleSourceChange = this.props.handlers.onSourceChange;
 
     render() {
         const xoffset_scaled = this.props.control.xoffset * INCS;
         const yoffset_scaled = this.props.control.yoffset * INCS;
         const scale_scaled = this.props.control.scale * INCS;
+        let invert_text : string = "Invert";
+        switch (this.props.parentEffectType) {
+            case EffectType.Image:
+                invert_text = "Draw Behind";
+                break;
+            case EffectType.Mask:
+                invert_text = "Inverse Alpha";
+                break;
+            default:
+                break;
+        }
         return (
             <div className="controls">
                 <div className="controls-top">
                    <SourceSelector onSourceChange={this.handleSourceChange} parentEffectType={this.props.parentEffectType}/>
                 </div>
                 <div className="controls-bottom">
-                    <div>
-                      <div>X Offset</div>
-                      <input type="range" name="xoffset" value={xoffset_scaled}
+                    <div className="controls-bar">
+                        <div className="controls-label">{invert_text}</div>
+                        <input type="checkbox" className="controls-toggle control"
+                            checked={this.props.control.invert} onChange={this.handleCheckboxChange}/>
+                    </div>
+                    <div className="controls-bar">
+                        <div className="controls-label">X Offset</div>
+                        <input type="range" name="xoffset" value={xoffset_scaled} className="control"
                              min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
                     </div>
-                    <div>
-                      <div>Y Offset</div>
-                      <input type="range" name="yoffset" value={yoffset_scaled}
+                    <div className="controls-bar">
+                        <div className="controls-label">Y Offset</div>
+                        <input type="range" name="yoffset" value={yoffset_scaled} className="control"
                              min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
                     </div>
-                    <div>
-                      <div>Scale</div>
-                      <input type="range" name="scale" value={scale_scaled}
+                    <div className="controls-bar">
+                        <div className="controls-label">Scale</div>
+                        <input type="range" name="scale" value={scale_scaled} className="control"
                              min={1} max={INCS*MAX_SCALE} onChange={this.handleSliderChange}/>
                     </div>
                 </div>
