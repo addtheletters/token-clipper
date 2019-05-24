@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Layer} from '../App';
+import {Layer} from './LayerStack';
 import ImageEffect from './ImageEffect';
 import MaskEffect from './MaskEffect';
 import CodeEffect from './CodeEffect';

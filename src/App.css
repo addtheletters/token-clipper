@@ -47,17 +47,27 @@ canvas {
   background-position:0 0, 10px 0, 10px 10px, 0px 10px; /* Must be half of one side of the square */
 }
 
+.list-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.list-side-spacer {
+  flex: 0 1 20%;
+}
+
 .effect-list {
+  flex: 1;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
   padding: 10px;
   /*border: 1px solid blue;*/
-  max-width: 1000px;
   margin: auto auto;
 }
 
 .effect-container {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -70,7 +80,7 @@ canvas {
 }
 
 .effect-title {
-  flex: 1;
+  flex: 0 1 content;
   padding: 10px;
   font-weight: bold;
   font-size: calc(25px);
@@ -83,7 +93,7 @@ canvas {
 }
 
 .controls {
-  flex: 3;
+  flex: 2;
   align-self: center;
 
   display: flex;
