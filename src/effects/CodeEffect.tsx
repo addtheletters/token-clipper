@@ -1,5 +1,6 @@
-import EffectLayer, {Effect, Sketcher} from './EffectLayer';
-import CodeControls from './CodeControls';
+import {Effect} from "./Effect";
+import EffectLayer, {Sketcher} from '../components/EffectLayer';
+import CodeControls from '../components/CodeControls';
 
 // Paint Effect.
 // Allows user to input p5 commands to draw, or choose from some presets.

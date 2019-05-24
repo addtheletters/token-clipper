@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {EffectType} from './EffectLayer';
+import {EffectType} from '../effects/Effect';
 
 export interface Props {
     onAdd : (et : EffectType) => void;

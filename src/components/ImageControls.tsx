@@ -1,5 +1,6 @@
 import * as React from 'react';
-import EffectLayer, {EffectType, ControlComponent} from './EffectLayer';
+import EffectLayer from './EffectLayer';
+import {EffectType, ControlComponent} from '../effects/Effect';
 import SourceSelector from './SourceSelector';
 
 const INCS = 100; // number of increments per (0,1) interval for slider

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {Layer} from './LayerStack';
-import ImageEffect from './ImageEffect';
-import MaskEffect from './MaskEffect';
-import CodeEffect from './CodeEffect';
+import {Effect, EffectType, getEffect} from '../effects/Effect';
 import ImageControls from './ImageControls';
 import CodeControls from './CodeControls';
 
@@ -23,43 +21,9 @@ interface Props {
     isLast?: boolean;
 }
 
-export interface ControlComponent {
-    getFreshState: ()=>any;
-    getHandlers: (el:EffectLayer)=>any;
-    getControlState: (el:EffectLayer)=>any;
-}
-
-export interface Effect {
-    name : string;
-    control : ControlComponent; // ControlComponent, but static interfaces don't exist
-    preLoad : (s:Sketcher, layer:EffectLayer) => void; // one-time initialization
-    preDraw : (s:Sketcher) => void; // prepare to draw; usually clear canvas
-    draw : (s:Sketcher) => void;    // draw the effect to the canvas
-}
-
 interface State {
     [x:string]: any; // lifted state from inner components
     basepixels?: Uint8ClampedArray; // (size * size * 4) length
-}
-
-export enum EffectType {
-    Image = "image",
-    Mask = "mask",
-    Code = "code",
-}
-
-function getEffect(et : EffectType) {
-    switch (et) {
-        case EffectType.Image:
-            return ImageEffect;
-        case EffectType.Mask:
-            return MaskEffect;
-        case EffectType.Code:
-            return CodeEffect;
-        default:
-            console.warn("tried to get unknown effect " + et + ": defaulting to ImageEffect");
-            return ImageEffect;
-    }
 }
 
 export interface Sketcher extends p5 {

@@ -1,5 +1,6 @@
-import {Effect, Sketcher} from './EffectLayer';
-import ImageControls from './ImageControls';
+import {Effect} from './Effect';
+import {Sketcher} from '../components/EffectLayer';
+import ImageControls from '../components/ImageControls';
 import ImageEffect from './ImageEffect';
 
 var MaskEffect : Effect = {

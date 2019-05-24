@@ -1,7 +1,7 @@
 import * as React from 'react';
 import LayerAdder from './LayerAdder';
 import EffectLayer from './EffectLayer';
-import {EffectType} from './EffectLayer';
+import {EffectType} from '../effects/Effect';
 
 export interface Layer {
     type : EffectType;
