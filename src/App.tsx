@@ -77,6 +77,7 @@ class App extends React.Component<any,State> {
         this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(SIZE * SIZE * 4));
       }
     }
+    this.results.splice(effectIndex, 1);
     const newLayers = this.state.layers.slice(0,effectIndex).concat(this.state.layers.slice(effectIndex+1));
     this.setState({ layers : newLayers });
   }
