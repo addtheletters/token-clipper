@@ -82,6 +82,18 @@ class App extends React.Component<any,State> {
     this.setState({ layers : newLayers });
   }
 
+  handleMoveEffect = (effectIndex : number, move : number) => {
+    let newIndex = effectIndex + move;
+    if ( newIndex < 0 || newIndex >= this.state.layers.length) {
+      console.error("can't move effect " + effectIndex + " to position " + newIndex);
+    }
+    const newLayers = this.state.layers.slice();
+    let removed = newLayers.splice(effectIndex, 1)[0];
+    newLayers.splice(newIndex, 0, removed);
+    this.setState({ layers : newLayers });
+    return newIndex;
+  }
+
   componentDidMount() {
     this.newLayer(EffectType.Image);
   }
@@ -91,7 +103,8 @@ class App extends React.Component<any,State> {
         <EffectLayer key={layer.key} type={layer.type} size={SIZE} ind={index}
             callbackContainer={layer}
             onNewOutput={this.handleNewOutput}
-            onRemove={this.handleRemoveEffect}/>
+            onRemove={this.handleRemoveEffect}
+            onMove={this.handleMoveEffect}/>
       );
     return (
       <div className="App">

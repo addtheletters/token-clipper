@@ -12,7 +12,8 @@ interface Props {
     type: EffectType;
     callbackContainer: Layer;
     onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
-    onRemove?: (eindex: number) => void;
+    onRemove: (eindex: number) => void;
+    onMove: (eindex: number, diff: number) => number;
 }
 
 export interface ControlComponent {
@@ -113,6 +114,10 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
     return sketcher;
 }
 
+function getDefaultFilename(el : EffectLayer) {
+    return "token-" + el.props.size + "px.png";
+}
+
 class EffectLayer extends React.Component<Props, State> {
     canvas?: p5;
     last_output?: Uint8ClampedArray;
@@ -135,6 +140,24 @@ class EffectLayer extends React.Component<Props, State> {
     handleRemoveButtonPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (this.props.onRemove) {
             this.props.onRemove(this.props.ind);
+        }
+    }
+
+    handleSaveButtonPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (this.canvas) {
+            this.canvas.saveCanvas(getDefaultFilename(this));
+        }
+    }
+
+    handleMoveUpPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (this.props.onMove) {
+            this.props.onMove(this.props.ind, 1);
+        }
+    }
+
+    handleMoveDownPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (this.props.onMove) {
+            this.props.onMove(this.props.ind, -1);
         }
     }
 
@@ -164,7 +187,7 @@ class EffectLayer extends React.Component<Props, State> {
     }
 
     getCanvasID = () => {
-        return "image-canvas-" + this.props.ind;
+        return "image-canvas-" + this.props.callbackContainer.key;
     }
 
     componentDidMount() {
@@ -205,11 +228,15 @@ class EffectLayer extends React.Component<Props, State> {
         }
 
         return (
-            <div className="effect-container" id={"effect-container"+this.props.ind}>
+            <div className="effect-container" id={"effect-container"+this.props.callbackContainer.key}>
                 <div className="effect-title">
-                    <div>[{this.props.ind + 1}]</div>
-                    <div>{this.effect.name}</div>
+                    <button className="effect-move-up" onClick={this.handleMoveUpPressed}>▲</button>
+                    <hr/>
+                    <div>[{this.props.ind + 1}] {this.effect.name}</div>
+                    <button className="effect-save-button" onClick={this.handleSaveButtonPressed}>save</button>
                     <button className="effect-remove-button" onClick={this.handleRemoveButtonPressed}>remove</button>
+                    <hr/>
+                    <button className="effect-move-down" onClick={this.handleMoveDownPressed}>▼</button>
                 </div>
                 <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>
