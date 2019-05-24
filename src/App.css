@@ -70,7 +70,7 @@ canvas {
 }
 
 .effect-title {
-  flex:initial;
+  flex: 1;
   padding: 10px;
   font-weight: bold;
   font-size: calc(25px);
@@ -83,7 +83,7 @@ canvas {
 }
 
 .controls {
-  flex: 1;
+  flex: 3;
   align-self: stretch;
 
   display: flex;
