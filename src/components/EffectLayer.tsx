@@ -130,7 +130,6 @@ function getDefaultFilename(el : EffectLayer) {
 class EffectLayer extends React.PureComponent<Props, State> {
     EMPTY_BASE: Uint8ClampedArray;
     canvas?: p5;
-    last_output?: Uint8ClampedArray;
     effect: Effect;
 
     constructor(props : Props) {
@@ -179,24 +178,9 @@ class EffectLayer extends React.PureComponent<Props, State> {
     }
 
     onOutput = (pixels : Uint8ClampedArray) => {
-        // only callback (trigger other effect components' state change)
-        // if comparing pixels has a result
-        let differs : boolean = false;
-        if (!this.last_output || pixels.length !== this.last_output.length) {
-            differs = true;
-        }
-        else {
-            for (let i = 0; i < pixels.length; i++) {
-                if (this.last_output[i] !== pixels[i]) {
-                    differs = true;
-                    break;
-                }
-            }
-        }
-        if (differs) {
-            this.props.onNewOutput(this.props.ind, pixels);
-            this.last_output = pixels;
-        }
+        // always emit, since it's difficult to tell when the next
+        // will need an update, even when we've not had a difference.
+        this.props.onNewOutput(this.props.ind, pixels);
         return;
     }
 
@@ -206,8 +190,6 @@ class EffectLayer extends React.PureComponent<Props, State> {
 
     componentDidMount() {
         this.canvas = new window.p5(getSketcher(this, this.effect), document.getElementById(this.getCanvasID()) as HTMLElement);
-        let bp = this.props.callbackContainer.getLastResultPixels();
-        this.handleBasePixelsChanged(bp);
     }
 
     componentWillUnmount() {
@@ -215,11 +197,6 @@ class EffectLayer extends React.PureComponent<Props, State> {
         if (this.canvas) {
             this.canvas.remove();
         }
-    }
-
-    componentDidUpdate() {
-        // if layer was re-ordered / base changed, make sure next layer is notified of output
-        this.last_output = undefined;
     }
 
     render() {

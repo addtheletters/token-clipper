@@ -10,7 +10,6 @@ export interface Layer {
     type : EffectType;
     key : number;
     onNewBasePixels: (pixels?: Uint8ClampedArray) => void; // empty until an EffectLayer constructor supplies it
-    getLastResultPixels: () => Uint8ClampedArray | null;   // hacky implementation, only call once during layer creation
 }
 
 interface State {
@@ -27,24 +26,10 @@ class App extends React.Component<any,State> {
   }
 
   newLayer = (et : EffectType) => {
-    let baseRequest : () => Uint8ClampedArray | null = () => null;
-
-    // when adding a new layer, this is a hacky way of getting
-    // the most recent result from the previously final layer.
-    // trying to call this function again after some layer removals
-    // have been performed will fail. this should probably be replaced.
-    if (this.state.layers.length >= 1) {
-      let end = this.state.layers.length - 1;
-      baseRequest = () => {
-        return this.results[end];
-      };
-    }
-
     const newLayers = this.state.layers.concat(
         { type:et,
           key:this.freeKey,
           onNewBasePixels:()=>{},
-          getLastResultPixels: baseRequest,
         }
       );
     this.freeKey++;
@@ -91,18 +76,7 @@ class App extends React.Component<any,State> {
     let removed = newLayers.splice(effectIndex, 1)[0];
     newLayers.splice(newIndex, 0, removed);
 
-    // set accurate base pixels reflecting move
-    let newBase = new Uint8ClampedArray(SIZE * SIZE * 4);
-    if ( newIndex > 0 ) {
-      let res = newLayers[newIndex-1].getLastResultPixels();
-      if (res) {
-        newBase = res;
-      }
-    }
-    removed.onNewBasePixels(newBase);
-
     this.setState({ layers : newLayers });
-    
     return newIndex;
   };
 
