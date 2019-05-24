@@ -72,7 +72,7 @@ var CodeEffect : Effect = {
 
     preLoad : (s:Sketcher, layer:EffectLayer) => {
         s.internal.oldCode = "";
-        s.internal.noError = false;
+        s.internal.codeValid = false;
 
         s.internal.handleError = function(errorString : string) {
             layer.setState({ errorText : errorString });
@@ -91,22 +91,22 @@ var CodeEffect : Effect = {
         // only try run if valid already valid or code has changed
         if (s.state.codeText !== s.internal.oldCode || s.internal.codeValid) {
             // only run if we have code
-            if (s.state.codeText && s.state.codeText.length > 0) {
+            if (s.state.shouldEval && s.state.codeText && s.state.codeText.length > 0) {
                 try {
                     let wrapper = runInWrapper(s.state.codeText, s);
                     window.clearTimeout(wrapper.timerHandle);
                     s.internal.codeValid = true;
-                    s.internal.handleError("no errors! :)");
+                    s.internal.handleError("[no errors! :)]");
                 }
                 catch (err) {
                     s.internal.codeValid = false;
                     s.internal.handleError(err.message);
                 }
+                s.internal.oldCode = s.state.codeText;
             }
             else {
-                s.internal.handleError("-");
+                s.internal.handleError("[-------------]");
             }
-            s.internal.oldCode = s.state.codeText;
         }
     },
 }
