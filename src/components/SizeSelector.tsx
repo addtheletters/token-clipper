@@ -35,6 +35,7 @@ class SizeSelector extends React.Component<Props, State> {
         return (
             <div className="size-selector">
                 <form onSubmit={this.handleSubmit}>
+                <div>Size (pixels):</div>
                 <input type="number" min={1} max={MAX_CANVAS_SIZE} value={this.state.inputCanvasSize}
                     onChange={this.handleInputChanged}/>
                 <input type="submit" value="apply"/>
