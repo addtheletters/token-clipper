@@ -53,7 +53,6 @@ class App extends React.Component<any,State> {
   }
 
   handleNewOutput = (effectIndex : number, pixels : Uint8ClampedArray) => {
-    console.log("handling new output from index " + effectIndex);
     this.results[effectIndex] = pixels;
     if (effectIndex < this.state.layers.length - 1) {
       this.state.layers[effectIndex+1].onNewBasePixels(pixels);
@@ -92,18 +91,18 @@ class App extends React.Component<any,State> {
     let removed = newLayers.splice(effectIndex, 1)[0];
     newLayers.splice(newIndex, 0, removed);
 
+    // set accurate base pixels reflecting move
+    let newBase = new Uint8ClampedArray(SIZE * SIZE * 4);
+    if ( newIndex > 0 ) {
+      let res = newLayers[newIndex-1].getLastResultPixels();
+      if (res) {
+        newBase = res;
+      }
+    }
+    removed.onNewBasePixels(newBase);
+
     this.setState({ layers : newLayers });
     
-    // set accurate base pixels reflecting move
-    // let newBase = new Uint8ClampedArray(SIZE * SIZE * 4);
-    // if ( newIndex > 0 ) {
-    //   let res = newLayers[newIndex-1].getLastResultPixels();
-    //   if (res) {
-    //     newBase = res;
-    //   }
-    // }
-    // removed.onNewBasePixels(newBase);
-
     return newIndex;
   }
 

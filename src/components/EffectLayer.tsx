@@ -149,7 +149,7 @@ class EffectLayer extends React.PureComponent<Props, State> {
             this.setState({ basepixels: pixels });
         }
         else {
-            console.log("EffectLayer: no base pixels");
+            //console.log("EffectLayer: no base pixels");
             this.setState({ basepixels: this.EMPTY_BASE });
         }
     }
