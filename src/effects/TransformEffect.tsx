@@ -15,10 +15,6 @@ var TransformEffect : Effect = {
     preDraw : (s:Sketcher) => {
         s.clear();
         s.resetMatrix();
-
-        // transform so center of image is origin?
-        // maybe also have a toggle for this
-        //s.translate(-s.props.size, -s.props.size);
     },
 
     draw : (s:Sketcher) => {
@@ -26,14 +22,21 @@ var TransformEffect : Effect = {
             //console.log("matrix use not implemented yet\n");
         }
         else {
-            s.scale(s.state.scaleX, s.state.scaleY);
+            // transform so center of image is origin
+            s.translate(s.props.size/2, s.props.size/2);
+
+            // apply transform settings
             s.rotate(s.state.rotate);
+            s.shearX(s.state.shearX);
+            s.shearY(s.state.shearY);
+            s.translate(s.state.translateX * s.props.size, 
+                s.state.translateY * s.props.size);
+            s.scale(s.state.scaleX, s.state.scaleY);
 
-            s.translate(s.state.translateX, s.state.translateY);
+            // draw pixels around center
+            s.image(s.baseImg, -s.props.size/2, -s.props.size/2);
         }
-
         // draw base to canvas
-        s.image(s.baseImg, 0, 0);
     },
 };
 

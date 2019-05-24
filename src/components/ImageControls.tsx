@@ -123,12 +123,12 @@ class ImageControls extends React.Component<Props> {
                         <input type="checkbox" className="controls-toggle control"
                             checked={this.props.control.invert} onChange={this.handleCheckboxChange}/>
                     </div>
-                    <ControlSlider label="xoffset" name="xoffset" value={this.props.control.xoffset}
-                        onChange={this.handleSliderChange} />
-                    <ControlSlider label="yoffset" name="yoffset" value={this.props.control.yoffset}
-                        onChange={this.handleSliderChange} />
-                    <ControlSlider label="scale" name="scale" value={this.props.control.scale}
-                        onChange={this.handleSliderChange} />
+                    <ControlSlider label="X offset" name="xoffset" value={this.props.control.xoffset}
+                        onChange={this.handleSliderChange} min={-1} max={1}/>
+                    <ControlSlider label="Y offset" name="yoffset" value={this.props.control.yoffset}
+                        onChange={this.handleSliderChange} min={-1} max={1}/>
+                    <ControlSlider label="Scale" name="scale" value={this.props.control.scale}
+                        onChange={this.handleSliderChange} min={0.0001} max={5}/>
                 </div>
             </div>
         );

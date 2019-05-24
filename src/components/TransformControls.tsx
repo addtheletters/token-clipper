@@ -48,8 +48,8 @@ class TransformControls extends React.Component<Props> {
             useMatrix : false,
             translateX : 0,
             translateY : 0,
-            scaleX : 0,
-            scaleY : 0,
+            scaleX : 1,
+            scaleY : 1,
             rotate : 0,
             shearX : 0,
             shearY : 0,
@@ -137,13 +137,13 @@ class TransformControls extends React.Component<Props> {
         }
         else {
             bottom_controls = (<div>
-                <ControlSlider label="translate X" name="translateX" value={this.props.control.translateX} onChange={this.handleSliderChange} />
-                <ControlSlider label="translate Y" name="translateY" value={this.props.control.translateY} onChange={this.handleSliderChange} />
-                <ControlSlider label="scale X" name="scaleX" value={this.props.control.scaleX} onChange={this.handleSliderChange} />
-                <ControlSlider label="scale Y" name="scaleY" value={this.props.control.scaleY} onChange={this.handleSliderChange} />
-                <ControlSlider label="rotate" name="rotate" value={this.props.control.rotate} onChange={this.handleSliderChange} />
-                <ControlSlider label="shear X" name="shearX" value={this.props.control.shearX} onChange={this.handleSliderChange} />
-                <ControlSlider label="shear Y" name="shearY" value={this.props.control.shearY} onChange={this.handleSliderChange} />
+                <ControlSlider label="translate X" name="translateX" value={this.props.control.translateX} onChange={this.handleSliderChange} min={-2} max={2}/>
+                <ControlSlider label="translate Y" name="translateY" value={this.props.control.translateY} onChange={this.handleSliderChange} min={-2} max={2}/>
+                <ControlSlider label="scale X" name="scaleX" value={this.props.control.scaleX} onChange={this.handleSliderChange} min={-5} max={5}/>
+                <ControlSlider label="scale Y" name="scaleY" value={this.props.control.scaleY} onChange={this.handleSliderChange} min={-5} max={5}/>
+                <ControlSlider label="rotate" name="rotate" value={this.props.control.rotate} onChange={this.handleSliderChange} min={-Math.PI} max={Math.PI}/>
+                <ControlSlider label="shear X" name="shearX" value={this.props.control.shearX} onChange={this.handleSliderChange} min={-Math.PI} max={Math.PI}/>
+                <ControlSlider label="shear Y" name="shearY" value={this.props.control.shearY} onChange={this.handleSliderChange} min={-Math.PI} max={Math.PI}/>
             </div>);
         }
 
