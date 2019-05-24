@@ -2,6 +2,7 @@ import * as React from 'react';
 import EffectLayer from './EffectLayer';
 import {ControlComponent} from '../effects/Effect';
 import ControlSlider from './ControlSlider';
+import MatrixTable from './MatrixTable';
 
 // since react doesn't like nested state, this will be spread into
 // the state of EffectLayer.
@@ -16,17 +17,19 @@ export interface TransformControlState {
     shearX : number;
     shearY : number;
 
-    // Matrix has 6 elements, [a, b, c, d, e, f]
-    // applied as [[a, c, e], 
-    //             [b, d, f], 
-    //             [0, 0, 1]]
+    // matrix remembers 6 elements
+    // applied as [[0, 1, 2],
+    //             [3, 4, 5],
+    //             [(0), (0), (1)]]
     matrix : Array<number>;
+    viewMatrix: Array<string>;
 }
 
 export interface TransformControlHandlers {
     onSliderChange: (name:string, value:number) => void;
     onUseMatrixChange: (useMatrix: boolean) => void;
     onInputMatrixChange: (matrix: Array<number>) => void;
+    onViewMatrixChange: (viewMatrix: Array<string>) => void;
 }
 
 interface Props {
@@ -53,7 +56,8 @@ class TransformControls extends React.Component<Props> {
             rotate : 0,
             shearX : 0,
             shearY : 0,
-            matrix : [1, 0, 0, 1, 0, 0], // identity
+            matrix : [1, 0, 0, 0, 1, 0], // identity
+            viewMatrix: ["1", "0", "0", "0", "1", "0"],
         };
         return state;
     };
@@ -95,7 +99,11 @@ class TransformControls extends React.Component<Props> {
 
             onInputMatrixChange: (matrix: Array<number>) => {
                 el.setState({ matrix:matrix });
-            }
+            },
+
+            onViewMatrixChange: (viewMatrix: Array<string>) => {
+                el.setState({ viewMatrix:viewMatrix });
+            },
         }
         return handlers;
     };
@@ -111,6 +119,7 @@ class TransformControls extends React.Component<Props> {
             shearX : el.state.shearX,
             shearY : el.state.shearY,
             matrix : el.state.matrix,
+            viewMatrix : el.state.viewMatrix,
         }
         return ctrl;
     };
@@ -123,16 +132,34 @@ class TransformControls extends React.Component<Props> {
         this.props.handlers.onUseMatrixChange(event.target.checked);
     };
 
-    handleSourceChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        // TODO parse as json, call handler for matrix
-        this.props.handlers.onInputMatrixChange([1, 0, 0, 1, 0, 0]);
+    handleMatrixChange = (ind : number, val : string) => {
+        //this.props.handlers.onInputMatrixChange([1, 0, 0, 1, 0, 0]);
+        console.log("Matrix received change at index " + ind + " : " + val);
+
+        let newMatrix = Array.from(this.props.control.matrix);
+        newMatrix[ind] = parseFloat(val);
+        let newView = Array.from(this.props.control.viewMatrix);
+        newView[ind] = val;
+        this.props.handlers.onViewMatrixChange(newView);
+        this.props.handlers.onInputMatrixChange(newMatrix);
     };
 
     render() {
         let bottom_controls = {};
+        let viewValues = [];
+        if (this.props.control.viewMatrix) {
+            viewValues = this.props.control.viewMatrix.concat(["0", "0", "1"]);
+        }
+        else {
+            viewValues = this.props.control.matrix.map(
+                (v: number)=>v.toString()).concat(["0", "0", "1"]);
+        }
         if (this.props.control.useMatrix) {
             bottom_controls = (<div>
-
+                <MatrixTable rows={3} cols={3} onChange={this.handleMatrixChange}
+                        values={viewValues}
+                        labels={["a", "c", "e", "b", "d", "f"]}
+                        showInput={[true, true, true, true, true, true, false, false, false]}/>
             </div>);
         }
         else {

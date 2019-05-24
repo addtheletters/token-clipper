@@ -19,7 +19,14 @@ var TransformEffect : Effect = {
 
     draw : (s:Sketcher) => {
         if (s.state.useMatrix) {
-            //console.log("matrix use not implemented yet\n");
+            let mat = s.state.matrix;
+            // matrix holds [[a, c, e],
+            //               [b, d, f],
+            //               [0, 0, 1]]
+            // applied as (a, b, c, d, e, f)
+            //let arranged = [mat[0], mat[3], mat[1], mat[4], mat[2], mat[5]];
+            s.applyMatrix(mat[0], mat[3], mat[1], mat[4], mat[2], mat[5]);
+            s.image(s.baseImg, 0, 0);
         }
         else {
             // transform so center of image is origin
@@ -36,7 +43,6 @@ var TransformEffect : Effect = {
             // draw pixels around center
             s.image(s.baseImg, -s.props.size/2, -s.props.size/2);
         }
-        // draw base to canvas
     },
 };
 
