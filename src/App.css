@@ -53,7 +53,7 @@ canvas {
 }
 
 .list-side-spacer {
-  flex: 0 1 20%;
+  flex: 0 10 24%;
 }
 
 .effect-list {
@@ -61,7 +61,7 @@ canvas {
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
-  padding: 10px;
+  padding: 1em;
   /*border: 1px solid blue;*/
   margin: auto auto;
 }
@@ -73,23 +73,23 @@ canvas {
   flex-direction: row;
   align-items: center;
   background-color: rgba(240, 240, 240, 1);
-  padding: 5px;
-  margin: 5px auto;
-  width: 90%;
+  padding: 1em;
+  margin: 0.5em auto;
+  width: 99%;
   box-shadow: 1px 1px 4px 1px gray;
 }
 
 .effect-title {
   flex: 0 1 content;
-  padding: 10px;
   font-weight: bold;
   font-size: calc(25px);
+  padding: 0.3em;
   width: 10%;
 }
 
 .effect-canvas {
   flex: none;
-  padding: 5px;
+  padding: 0.5em;
 }
 
 .controls {
@@ -100,13 +100,13 @@ canvas {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  padding: 5px;
   font-size: calc(15px + 0.2vmin);
+  padding: 0.5em;
 }
 
 .controls-top {
   flex:1 1;
-  padding: 10px 10px 5px 10px;
+  padding: 1em 1em 0.5em 1em;
 
   display: flex;
   flex-direction: column;
@@ -114,7 +114,7 @@ canvas {
 
 .controls-bottom {
   flex:2 2;
-  padding: 5px 10px 10px 10px;
+  padding: 0.5em 1em 1em 1em;
 
   display: flex;
   flex-direction: column;
@@ -132,7 +132,7 @@ canvas {
 
 .controls-area {
   flex:15;
-  padding: 10px 10px;
+  padding: 1em 1em;
   min-width: 256px;
 }
 
@@ -145,7 +145,7 @@ canvas {
 }
 
 .controls-label {
-  padding: 5px;
+  padding: 0.4em;
 }
 
 .control {
@@ -168,11 +168,11 @@ canvas {
 }
 
 .source-select-type {
-  padding: 0px 10px;
+  padding: 0px 1em;
 }
 
 .source-select-sub {
-  padding: 0px 10px;
+  padding: 0px 1em;
 }
 
 .img-hidden {
