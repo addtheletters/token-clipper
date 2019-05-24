@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import LayerAdder from './components/LayerAdder'
-import EffectLayer from './components/EffectLayer'
-import {EffectType} from './components/EffectLayer'
+import LayerAdder from './components/LayerAdder';
+import EffectLayer from './components/EffectLayer';
+import {EffectType} from './components/EffectLayer';
 
 export const SIZE = 256;
 
@@ -50,7 +50,7 @@ class App extends React.Component<any,State> {
     this.freeKey++;
     this.results.push(new Uint8ClampedArray(SIZE * SIZE * 4));
     this.setState({ layers : newLayers });
-  }
+  };
 
   handleNewOutput = (effectIndex : number, pixels : Uint8ClampedArray) => {
     this.results[effectIndex] = pixels;
@@ -58,11 +58,11 @@ class App extends React.Component<any,State> {
       this.state.layers[effectIndex+1].onNewBasePixels(pixels);
     }
     return;
-  }
+  };
 
   handleAddEffect = (et : EffectType) => {
     this.newLayer(et);
-  }
+  };
 
   handleRemoveEffect = (effectIndex : number) => {
     if (effectIndex < 0 || effectIndex >= this.state.layers.length) {
@@ -80,7 +80,7 @@ class App extends React.Component<any,State> {
     this.results.splice(effectIndex, 1);
     const newLayers = this.state.layers.slice(0,effectIndex).concat(this.state.layers.slice(effectIndex+1));
     this.setState({ layers : newLayers });
-  }
+  };
 
   handleMoveEffect = (effectIndex : number, move : number) => {
     let newIndex = effectIndex + move;
@@ -104,7 +104,7 @@ class App extends React.Component<any,State> {
     this.setState({ layers : newLayers });
     
     return newIndex;
-  }
+  };
 
   componentDidMount() {
     this.newLayer(EffectType.Image);

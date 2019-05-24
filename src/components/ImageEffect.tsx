@@ -1,5 +1,5 @@
-import {Effect, Sketcher} from './EffectLayer'
-import ImageControls from './ImageControls'
+import {Effect, Sketcher} from './EffectLayer';
+import ImageControls from './ImageControls';
 
 const ALT_TEXT = "load failed\n"
                  + "   (CORS not allowed?)";

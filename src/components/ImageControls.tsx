@@ -1,6 +1,6 @@
 import * as React from 'react';
-import EffectLayer, {ControlComponent} from './EffectLayer'
-import SourceSelector from './SourceSelector'
+import EffectLayer, {ControlComponent} from './EffectLayer';
+import SourceSelector from './SourceSelector';
 
 const INCS = 100; // number of increments per (0,1) interval for slider
 const MAX_SCALE = 5;

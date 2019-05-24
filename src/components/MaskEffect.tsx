@@ -1,6 +1,6 @@
-import {Effect, Sketcher} from './EffectLayer'
-import ImageControls from './ImageControls'
-import ImageEffect from './ImageEffect'
+import {Effect, Sketcher} from './EffectLayer';
+import ImageControls from './ImageControls';
+import ImageEffect from './ImageEffect';
 
 var MaskEffect : Effect = {
     name : "Mask",
@@ -60,6 +60,6 @@ var MaskEffect : Effect = {
                 200, 100);
         }
     },
-}
+};
 
 export default MaskEffect;
