@@ -1,9 +1,7 @@
 import * as React from 'react';
 import EffectLayer from './EffectLayer';
 import {ControlComponent} from '../effects/Effect';
-
-const INCS = 100; // number of increments per (0,1) interval for slider
-const MAX_SCALE = 5;
+import ControlSlider from './ControlSlider';
 
 // since react doesn't like nested state, this will be spread into
 // the state of EffectLayer.
@@ -50,8 +48,8 @@ class TransformControls extends React.Component<Props> {
             useMatrix : false,
             translateX : 0,
             translateY : 0,
-            scaleX : 1,
-            scaleY : 1,
+            scaleX : 0,
+            scaleY : 0,
             rotate : 0,
             shearX : 0,
             shearY : 0,
@@ -117,8 +115,8 @@ class TransformControls extends React.Component<Props> {
         return ctrl;
     };
 
-    handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.handlers.onSliderChange(event.target.name, parseFloat(event.target.value) / INCS);
+    handleSliderChange = (name : string, value : number) => {
+        this.props.handlers.onSliderChange(name, value);
     };
 
     handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,57 +129,21 @@ class TransformControls extends React.Component<Props> {
     };
 
     render() {
-        let translateX_scaled = this.props.control.translateX * INCS;
-        let translateY_scaled = this.props.control.translateY * INCS;
-        let scaleX_scaled = this.props.control.scaleX * INCS;
-        let scaleY_scaled = this.props.control.scaleY * INCS;
-        let rotate_scaled = this.props.control.rotate * INCS;
-        let shearX_scaled = this.props.control.shearX * INCS;
-        let shearY_scaled = this.props.control.shearY * INCS;
-
         let bottom_controls = {};
         if (this.props.control.useMatrix) {
             bottom_controls = (<div>
-                
+
             </div>);
         }
         else {
             bottom_controls = (<div>
-                <div className="controls-bar">
-                    <div className="controls-label">translate X</div>
-                    <input type="range" name="translateX" value={translateX_scaled} className="control"
-                        min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
-                <div className="controls-bar">
-                    <div className="controls-label">translate Y</div>
-                    <input type="range" name="translateY" value={translateY_scaled} className="control"
-                        min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
-                <div className="controls-bar">
-                    <div className="controls-label">scale X</div>
-                    <input type="range" name="scaleX" value={scaleX_scaled} className="control"
-                        min={-INCS} max={INCS*MAX_SCALE} onChange={this.handleSliderChange}/>
-                </div>
-                <div className="controls-bar">
-                    <div className="controls-label">scale Y</div>
-                    <input type="range" name="scaleY" value={scaleY_scaled} className="control"
-                        min={-INCS} max={INCS*MAX_SCALE} onChange={this.handleSliderChange}/>
-                </div>
-                <div className="controls-bar">
-                    <div className="controls-label">rotate</div>
-                    <input type="range" name="rotate" value={rotate_scaled} className="control"
-                        min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
-                <div className="controls-bar">
-                    <div className="controls-label">shear X</div>
-                    <input type="range" name="shearX" value={shearX_scaled} className="control"
-                        min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
-                <div className="controls-bar">
-                    <div className="controls-label">shear Y</div>
-                    <input type="range" name="shearY" value={shearY_scaled} className="control"
-                        min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                </div>
+                <ControlSlider label="translate X" name="translateX" value={this.props.control.translateX} onChange={this.handleSliderChange} />
+                <ControlSlider label="translate Y" name="translateY" value={this.props.control.translateY} onChange={this.handleSliderChange} />
+                <ControlSlider label="scale X" name="scaleX" value={this.props.control.scaleX} onChange={this.handleSliderChange} />
+                <ControlSlider label="scale Y" name="scaleY" value={this.props.control.scaleY} onChange={this.handleSliderChange} />
+                <ControlSlider label="rotate" name="rotate" value={this.props.control.rotate} onChange={this.handleSliderChange} />
+                <ControlSlider label="shear X" name="shearX" value={this.props.control.shearX} onChange={this.handleSliderChange} />
+                <ControlSlider label="shear Y" name="shearY" value={this.props.control.shearY} onChange={this.handleSliderChange} />
             </div>);
         }
 

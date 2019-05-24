@@ -71,8 +71,9 @@ var ImageEffect : Effect = {
             // placeholder text since no image is loaded
             s.textSize(s.state.scale * 10);
             s.text("「" + s.internal.text + "\n" +
-                   "   (" + s.state.xoffset + "," + s.state.yoffset + ")\n" +
-                   "   x " + s.state.scale + "\t」",
+                   "   (" + s.state.xoffset.toFixed(2) + ","
+                          + s.state.yoffset.toFixed(2) + ")\n" +
+                   "   x "  + s.state.scale.toFixed(2) + "\t」",
                 s.props.size/2 + (s.state.xoffset * s.props.size), 
                 s.props.size/2 + (s.state.yoffset * s.props.size), 
                 200, 100);

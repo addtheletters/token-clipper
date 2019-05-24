@@ -2,8 +2,8 @@ import * as React from 'react';
 import EffectLayer from './EffectLayer';
 import {EffectType, ControlComponent} from '../effects/Effect';
 import SourceSelector from './SourceSelector';
+import ControlSlider from './ControlSlider';
 
-const INCS = 100; // number of increments per (0,1) interval for slider
 const MAX_SCALE = 5;
 
 // since react doesn't like nested state, this will be spread into
@@ -90,8 +90,8 @@ class ImageControls extends React.Component<Props> {
         return ctrl;
     };
 
-    handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.handlers.onSliderChange(event.target.name, parseFloat(event.target.value) / INCS);
+    handleSliderChange = (name : string, value : number) => {
+        this.props.handlers.onSliderChange(name, value);
     };
 
     handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,9 +101,6 @@ class ImageControls extends React.Component<Props> {
     handleSourceChange = this.props.handlers.onSourceChange;
 
     render() {
-        const xoffset_scaled = this.props.control.xoffset * INCS;
-        const yoffset_scaled = this.props.control.yoffset * INCS;
-        const scale_scaled = this.props.control.scale * INCS;
         let invert_text : string = "Invert";
         switch (this.props.parentEffectType) {
             case EffectType.Image:
@@ -126,21 +123,12 @@ class ImageControls extends React.Component<Props> {
                         <input type="checkbox" className="controls-toggle control"
                             checked={this.props.control.invert} onChange={this.handleCheckboxChange}/>
                     </div>
-                    <div className="controls-bar">
-                        <div className="controls-label">X Offset</div>
-                        <input type="range" name="xoffset" value={xoffset_scaled} className="control"
-                             min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                    </div>
-                    <div className="controls-bar">
-                        <div className="controls-label">Y Offset</div>
-                        <input type="range" name="yoffset" value={yoffset_scaled} className="control"
-                             min={-INCS} max={INCS} onChange={this.handleSliderChange}/>
-                    </div>
-                    <div className="controls-bar">
-                        <div className="controls-label">Scale</div>
-                        <input type="range" name="scale" value={scale_scaled} className="control"
-                             min={1} max={INCS*MAX_SCALE} onChange={this.handleSliderChange}/>
-                    </div>
+                    <ControlSlider label="xoffset" name="xoffset" value={this.props.control.xoffset}
+                        onChange={this.handleSliderChange} />
+                    <ControlSlider label="yoffset" name="yoffset" value={this.props.control.yoffset}
+                        onChange={this.handleSliderChange} />
+                    <ControlSlider label="scale" name="scale" value={this.props.control.scale}
+                        onChange={this.handleSliderChange} />
                 </div>
             </div>
         );
