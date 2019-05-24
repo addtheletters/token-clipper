@@ -3,6 +3,7 @@ import {Layer} from './LayerStack';
 import {Effect, EffectType, getEffect} from '../effects/Effect';
 import ImageControls from './ImageControls';
 import CodeControls from './CodeControls';
+import TransformControls from './TransformControls';
 
 const EFFECT_RENDERER = "p2d"; // "webgl" | "p2d" // webgl doesn't work very well yet
 
@@ -168,7 +169,7 @@ class EffectLayer extends React.PureComponent<Props, State> {
     render() {
         let controls = <div className="controls"></div>;
         switch (this.props.type) {
-            case EffectType.Image:
+            case EffectType.Image: // falltrough
             case EffectType.Mask:
                 controls = (
                     <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)} parentEffectType={this.props.type}/>
@@ -177,6 +178,11 @@ class EffectLayer extends React.PureComponent<Props, State> {
             case EffectType.Code:
                 controls = (
                     <CodeControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
+                    );
+                break;
+            case EffectType.Transform:
+                controls = (
+                    <TransformControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
                     );
                 break;
             default:
@@ -191,7 +197,7 @@ class EffectLayer extends React.PureComponent<Props, State> {
                         onClick={this.handleMoveUpPressed}
                         disabled={this.props.isLast}>▲</button>
                     <hr/>
-                    <div>[{this.props.ind + 1}] {this.effect.name}</div>
+                    <div>[{this.props.ind + 1}]</div><div>{this.effect.name}</div>
                     <button className="effect-save-button"
                         onClick={this.handleSaveButtonPressed}>save</button>
                     <button className="effect-remove-button"

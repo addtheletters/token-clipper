@@ -2,11 +2,13 @@ import EffectLayer, {Sketcher} from "../components/EffectLayer";
 import ImageEffect from './ImageEffect';
 import MaskEffect from './MaskEffect';
 import CodeEffect from './CodeEffect';
+import TransformEffect from './TransformEffect';
 
 export enum EffectType {
     Image = "image",
     Mask = "mask",
     Code = "code",
+    Transform = "transform",
 }
 
 export interface ControlComponent {
@@ -31,6 +33,8 @@ export function getEffect(et : EffectType) {
             return MaskEffect;
         case EffectType.Code:
             return CodeEffect;
+        case EffectType.Transform:
+            return TransformEffect;
         default:
             console.warn("tried to get unknown effect " + et + ": defaulting to ImageEffect");
             return ImageEffect;

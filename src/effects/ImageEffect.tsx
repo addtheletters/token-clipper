@@ -8,6 +8,8 @@ const ALT_TEXT = "load failed\n"
 // server that can apply the Access-Control-Allow-Origin header
 const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
 
+// Image Effect.
+// Draws an image to the canvas.
 var ImageEffect : Effect = {
     name : "Image",
     control : ImageControls.controlFuncs,

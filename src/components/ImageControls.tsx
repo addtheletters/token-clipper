@@ -12,6 +12,7 @@ export interface ImageControlState {
     xoffset : number;
     yoffset : number;
     scale : number;
+
     src?: string;
     invert : boolean;
 }
@@ -43,6 +44,7 @@ class ImageControls extends React.Component<Props> {
             xoffset : 0,
             yoffset : 0,
             scale : 1,
+
             invert : false,
         };
         return state;
@@ -81,6 +83,7 @@ class ImageControls extends React.Component<Props> {
             xoffset: el.state.xoffset,
             yoffset: el.state.yoffset,
             scale: el.state.scale,
+
             src: el.state.src,
             invert: el.state.invert,
         }

@@ -2,10 +2,6 @@ import {Effect} from "./Effect";
 import EffectLayer, {Sketcher} from '../components/EffectLayer';
 import CodeControls from '../components/CodeControls';
 
-// Paint Effect.
-// Allows user to input p5 commands to draw, or choose from some presets.
-// Dangerous evals? probably.
-
 // time-out for code execution
 const TIME_LIMIT_MS : number = 500;
 const USER_CODE_INSTANCE_NAME : string = "pfive";
@@ -67,6 +63,8 @@ function runInWrapper(__code__: string, __instance__: p5) {
     return __wrapper__;
 }
 
+// Code Effect.
+// Allows user to input p5 commands to draw.
 var CodeEffect : Effect = {
     name : "Code",
     control : CodeControls.controlFuncs,

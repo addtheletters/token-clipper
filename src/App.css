@@ -83,7 +83,7 @@ canvas {
 .effect-title {
   flex: 0 1 content;
   font-weight: bold;
-  font-size: calc(25px);
+  font-size: calc(18px + 0.15vmin);
   padding: 0.3em;
   width: 10%;
 }
@@ -101,7 +101,7 @@ canvas {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  font-size: calc(15px + 0.2vmin);
+  font-size: calc(15px + 0.1vmin);
   padding: 0.5em;
 }
 
