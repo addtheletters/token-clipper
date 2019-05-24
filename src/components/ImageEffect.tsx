@@ -22,7 +22,6 @@ var ImageEffect : Effect = {
             s.internal.img = null;
 
             let tmpsrc = s.state.src.trim();
-
             // these functions don't support Promises yet :(
             s.loadImage(tmpsrc, (img : p5.Image) => {
                 s.internal.img = img;

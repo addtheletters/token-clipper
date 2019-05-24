@@ -205,7 +205,7 @@ class EffectLayer extends React.PureComponent<Props, State> {
             case EffectType.Image:
             case EffectType.Mask:
                 controls = (
-                    <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)}/>
+                    <ImageControls control={this.effect.control.getControlState(this)} handlers={this.effect.control.getHandlers(this)} parentEffectType={this.props.type}/>
                     );
                 break;
             case EffectType.Code:

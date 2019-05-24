@@ -1,18 +1,20 @@
 import * as React from 'react';
-
-interface Props {
-    onSourceChange : (url:string) => void;
-}
-
-interface State {
-    selectedType : SourceType;
-    selectedBuiltIn : string;
-}
+import {EffectType} from './EffectLayer'
 
 enum SourceType {
     BuiltIn = "built-in",
     LocalFile = "local-file",
     URL = "url",
+}
+
+interface Props {
+    onSourceChange : (url:string) => void;
+    parentEffectType ?: EffectType;
+}
+
+interface State {
+    selectedType : SourceType;
+    selectedBuiltIn : string;
 }
 
 function prettySource(s : SourceType): string {
@@ -33,17 +35,32 @@ interface BuiltIns {
 }
 
 const BUILT_INS : BuiltIns = {
+    "Yuratzu of Pain (167 x 173px)" : "assets/yuratzu.png",
     "Mask Circle (radius 128px)"    : "assets/circle-alpha-512.png",
     "Mask Square (side 256px)"      : "assets/square-alpha-512.png",
-    "Yuratzu of Pain (167 x 173px)" : "assets/yuratzu.png",
 };
 
 class SourceSelector extends React.Component<Props, State> {
     constructor(props : Props) {
         super(props);
+        let st  = SourceType.BuiltIn;
+        let sbi = Object.keys(BUILT_INS)[0];
+
+        switch (this.props.parentEffectType) {
+            case EffectType.Mask:
+                st  = SourceType.BuiltIn;
+                sbi = Object.keys(BUILT_INS)[1]; // circle mask
+                break;
+            case EffectType.Image:
+                st  = SourceType.LocalFile;
+                break;
+            default:
+                break;
+        }
+
         this.state = {
-            selectedType: SourceType.LocalFile,
-            selectedBuiltIn : Object.keys(BUILT_INS)[0],
+            selectedType: st,
+            selectedBuiltIn : sbi,
         };
     }
 
@@ -82,6 +99,21 @@ class SourceSelector extends React.Component<Props, State> {
         if (event.target.value === SourceType.BuiltIn) {
             // load selected built-in immediately
             this.props.onSourceChange(BUILT_INS[this.state.selectedBuiltIn]);
+        }
+        else {
+            // clear source selection
+            this.props.onSourceChange("");
+        }
+    }
+
+    componentDidMount() {
+        switch (this.state.selectedType) {
+            case SourceType.BuiltIn:
+                // if default builtin, notify to load
+                this.props.onSourceChange(BUILT_INS[this.state.selectedBuiltIn]);
+                break;
+            default:
+                break;
         }
     }
 

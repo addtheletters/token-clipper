@@ -1,5 +1,5 @@
 import * as React from 'react';
-import EffectLayer, {ControlComponent} from './EffectLayer';
+import EffectLayer, {EffectType, ControlComponent} from './EffectLayer';
 import SourceSelector from './SourceSelector';
 
 const INCS = 100; // number of increments per (0,1) interval for slider
@@ -22,6 +22,8 @@ export interface ImageControlHandlers {
 interface Props {
     control : ImageControlState,
     handlers : ImageControlHandlers,
+
+    parentEffectType ?: EffectType;
 }
 
 class ImageControls extends React.Component<Props> {
@@ -89,7 +91,7 @@ class ImageControls extends React.Component<Props> {
         return (
             <div className="controls">
                 <div className="controls-top">
-                   <SourceSelector onSourceChange={this.handleSourceChange}/>
+                   <SourceSelector onSourceChange={this.handleSourceChange} parentEffectType={this.props.parentEffectType}/>
                 </div>
                 <div className="controls-bottom">
                     <div>
