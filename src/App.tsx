@@ -3,7 +3,7 @@ import './App.css';
 import LayerStack from './components/LayerStack';
 import SizeSelector from './components/SizeSelector';
 
-export const DEFAULT_CANVAS_SIZE = Math.pow(2, 7); // 256
+export const DEFAULT_CANVAS_SIZE = Math.pow(2, 8); // 256
 export const MAX_CANVAS_SIZE = Math.pow(2, 10);    // 1024
 
 interface State {

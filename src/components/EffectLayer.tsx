@@ -6,6 +6,8 @@ import CodeEffect from './CodeEffect';
 import ImageControls from './ImageControls';
 import CodeControls from './CodeControls';
 
+const EFFECT_RENDERER = "p2d"; // "webgl" | "p2d" // webgl doesn't work very well yet
+
 interface Props {
     size : number;
     ind : number;
@@ -82,7 +84,7 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
 
         s.setup = function() {
             s.pixelDensity(1);
-            s.createCanvas(s.props.size, s.props.size);
+            s.createCanvas(s.props.size, s.props.size, EFFECT_RENDERER);
         }
 
         function preDraw() {
