@@ -10,10 +10,15 @@ interface Props {
     size : number;
     ind : number;
     type: EffectType;
+
     callbackContainer: Layer;
-    onNewOutput?: (eindex: number, pixels: Uint8ClampedArray) => void;
+
+    onNewOutput: (eindex: number, pixels: Uint8ClampedArray) => void;
     onRemove: (eindex: number) => void;
     onMove: (eindex: number, diff: number) => number;
+
+    isFirst?: boolean;
+    isLast?: boolean;
 }
 
 export interface ControlComponent {
@@ -105,10 +110,8 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             effect.draw(s);
 
             // inform that new pixels are created
-            if (parent.props.onNewOutput) {
-                s.loadPixels();
-                parent.onOutput(Uint8ClampedArray.from(s.pixels));
-            }
+            s.loadPixels();
+            parent.onOutput(Uint8ClampedArray.from(s.pixels));
         }
     };
     return sketcher;
@@ -162,9 +165,6 @@ class EffectLayer extends React.Component<Props, State> {
     }
 
     onOutput = (pixels : Uint8ClampedArray) => {
-        if (!this.props.onNewOutput) {
-            return;
-        }
         // only callback (trigger other effect components' state change)
         // if comparing pixels has a result
         let differs : boolean = false;
@@ -230,13 +230,19 @@ class EffectLayer extends React.Component<Props, State> {
         return (
             <div className="effect-container" id={"effect-container"+this.props.callbackContainer.key}>
                 <div className="effect-title">
-                    <button className="effect-move-up" onClick={this.handleMoveUpPressed}>▲</button>
+                    <button className="effect-move-up"
+                        onClick={this.handleMoveUpPressed}
+                        disabled={this.props.isLast}>▲</button>
                     <hr/>
                     <div>[{this.props.ind + 1}] {this.effect.name}</div>
-                    <button className="effect-save-button" onClick={this.handleSaveButtonPressed}>save</button>
-                    <button className="effect-remove-button" onClick={this.handleRemoveButtonPressed}>remove</button>
+                    <button className="effect-save-button"
+                        onClick={this.handleSaveButtonPressed}>save</button>
+                    <button className="effect-remove-button"
+                        onClick={this.handleRemoveButtonPressed}>remove</button>
                     <hr/>
-                    <button className="effect-move-down" onClick={this.handleMoveDownPressed}>▼</button>
+                    <button className="effect-move-down"
+                        onClick={this.handleMoveDownPressed}
+                        disabled={this.props.isFirst}>▼</button>
                 </div>
                 <div className="effect-canvas">
                     <div className="canvas-container" id={this.getCanvasID()}></div>

@@ -90,7 +90,18 @@ class App extends React.Component<any,State> {
     const newLayers = this.state.layers.slice();
     let removed = newLayers.splice(effectIndex, 1)[0];
     newLayers.splice(newIndex, 0, removed);
+
+    // set accurate base pixels reflecting move
+    let newBase = new Uint8ClampedArray(SIZE * SIZE * 4);
+    if ( newIndex > 0 ) {
+      let res = newLayers[newIndex-1].getLastResultPixels();
+      if (res) {
+        newBase = res;
+      }
+    }
+
     this.setState({ layers : newLayers });
+    removed.onNewBasePixels(newBase);
     return newIndex;
   }
 
@@ -104,7 +115,9 @@ class App extends React.Component<any,State> {
             callbackContainer={layer}
             onNewOutput={this.handleNewOutput}
             onRemove={this.handleRemoveEffect}
-            onMove={this.handleMoveEffect}/>
+            onMove={this.handleMoveEffect}
+            isFirst={(index === 0)}
+            isLast={(index === this.state.layers.length-1)}/>
       );
     return (
       <div className="App">
