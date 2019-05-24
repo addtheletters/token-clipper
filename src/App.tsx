@@ -9,7 +9,7 @@ export const SIZE = 256;
 export interface Layer {
     type : EffectType;
     key : number;
-    onNewBasePixels: (pixels : Uint8ClampedArray) => void; // empty until an EffectLayer constructor supplies it
+    onNewBasePixels: (pixels?: Uint8ClampedArray) => void; // empty until an EffectLayer constructor supplies it
     getLastResultPixels: () => Uint8ClampedArray | null;   // hacky implementation, only call once during layer creation
 }
 
@@ -53,6 +53,7 @@ class App extends React.Component<any,State> {
   }
 
   handleNewOutput = (effectIndex : number, pixels : Uint8ClampedArray) => {
+    console.log("handling new output from index " + effectIndex);
     this.results[effectIndex] = pixels;
     if (effectIndex < this.state.layers.length - 1) {
       this.state.layers[effectIndex+1].onNewBasePixels(pixels);
@@ -74,7 +75,7 @@ class App extends React.Component<any,State> {
         this.state.layers[effectIndex+1].onNewBasePixels(this.results[effectIndex-1]);
       }
       else {
-        this.state.layers[effectIndex+1].onNewBasePixels(new Uint8ClampedArray(SIZE * SIZE * 4));
+        this.state.layers[effectIndex+1].onNewBasePixels();
       }
     }
     this.results.splice(effectIndex, 1);
@@ -91,22 +92,29 @@ class App extends React.Component<any,State> {
     let removed = newLayers.splice(effectIndex, 1)[0];
     newLayers.splice(newIndex, 0, removed);
 
-    // set accurate base pixels reflecting move
-    let newBase = new Uint8ClampedArray(SIZE * SIZE * 4);
-    if ( newIndex > 0 ) {
-      let res = newLayers[newIndex-1].getLastResultPixels();
-      if (res) {
-        newBase = res;
-      }
-    }
-
     this.setState({ layers : newLayers });
-    removed.onNewBasePixels(newBase);
+    
+    // set accurate base pixels reflecting move
+    // let newBase = new Uint8ClampedArray(SIZE * SIZE * 4);
+    // if ( newIndex > 0 ) {
+    //   let res = newLayers[newIndex-1].getLastResultPixels();
+    //   if (res) {
+    //     newBase = res;
+    //   }
+    // }
+    // removed.onNewBasePixels(newBase);
+
     return newIndex;
   }
 
   componentDidMount() {
     this.newLayer(EffectType.Image);
+  }
+
+  componentDidUpdate() {
+    if (this.state.layers.length > 0) {
+      this.state.layers[0].onNewBasePixels();
+    }
   }
 
   render() {

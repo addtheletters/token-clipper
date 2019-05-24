@@ -90,14 +90,20 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             s.state = parent.state;
 
             // apply base pixels from previous layer to buffer image
+            let psize = s.props.size * s.props.size * 4;
+            s.baseImg.loadPixels();
             if (s.state.basepixels) {
-                let psize = s.props.size * s.props.size * 4;
-                s.baseImg.loadPixels();
                 for (let i = 0; i < psize; i++) {
                     s.baseImg.pixels[i] = s.state.basepixels[i];
                 }
-                s.baseImg.updatePixels();
             }
+            else {
+                // zero out base image;
+                for (let i = 0; i < psize; i++) {
+                    s.baseImg.pixels[i] = 0;
+                }
+            }
+            s.baseImg.updatePixels();
 
             // prepare to draw this frame
             effect.preDraw(s);
@@ -121,13 +127,15 @@ function getDefaultFilename(el : EffectLayer) {
     return "token-" + el.props.size + "px.png";
 }
 
-class EffectLayer extends React.Component<Props, State> {
+class EffectLayer extends React.PureComponent<Props, State> {
+    EMPTY_BASE: Uint8ClampedArray;
     canvas?: p5;
     last_output?: Uint8ClampedArray;
     effect: Effect;
 
     constructor(props : Props) {
         super(props);
+        this.EMPTY_BASE = new Uint8ClampedArray(this.props.size * this.props.size * 4);
         this.props.callbackContainer.onNewBasePixels = this.handleBasePixelsChanged;
         this.effect = getEffect(this.props.type);
         this.state = {
@@ -136,8 +144,14 @@ class EffectLayer extends React.Component<Props, State> {
         this.canvas = undefined;
     }
 
-    handleBasePixelsChanged = (pixels : Uint8ClampedArray) => {
-        this.setState({ basepixels: pixels });
+    handleBasePixelsChanged = (pixels?: Uint8ClampedArray | null) => {
+        if (pixels) {
+            this.setState({ basepixels: pixels });
+        }
+        else {
+            console.log("EffectLayer: no base pixels");
+            this.setState({ basepixels: this.EMPTY_BASE });
+        }
     }
 
     handleRemoveButtonPressed = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -193,12 +207,7 @@ class EffectLayer extends React.Component<Props, State> {
     componentDidMount() {
         this.canvas = new window.p5(getSketcher(this, this.effect), document.getElementById(this.getCanvasID()) as HTMLElement);
         let bp = this.props.callbackContainer.getLastResultPixels();
-        if (bp) {
-            this.setState({ basepixels : bp });
-        }
-        else {
-            console.log("EffectLayer: no initial base pixels");
-        }
+        this.handleBasePixelsChanged(bp);
     }
 
     componentWillUnmount() {
@@ -206,6 +215,11 @@ class EffectLayer extends React.Component<Props, State> {
         if (this.canvas) {
             this.canvas.remove();
         }
+    }
+
+    componentDidUpdate() {
+        // if layer was re-ordered / base changed, make sure next layer is notified of output
+        this.last_output = undefined;
     }
 
     render() {
