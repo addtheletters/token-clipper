@@ -36,8 +36,15 @@ interface BuiltIns {
 
 const BUILT_INS : BuiltIns = {
     "Yuratzu of Pain (167 x 173px)" : "assets/yuratzu.png",
-    "Mask Circle (radius 128px)"    : "assets/circle-alpha-512.png",
-    "Mask Square (side 256px)"      : "assets/square-alpha-512.png",
+    "Circle Mask (radius 128px)"    : "assets/circle-alpha-512.png",
+    "Square Mask (side 256px)"      : "assets/square-alpha-512.png",
+    "Ring Mask (radius 128px±16px)" : "assets/ring-alpha-512.png",
+    "Linear Gradient (512px)"       : "assets/linear-grad-512.png",
+    "Bi-linear Gradient (512px)"    : "assets/bilinear-grad-512.png",
+    "Square Gradient (512px)"       : "assets/square-grad-512.png",
+    "Radial Gradient (512px)"       : "assets/radial-grad-512.png",
+    "Spiral CW Gradient (512px)"    : "assets/spiral_cw-grad-512.png",
+    "Spiral CCW Gradient (512px)"   : "assets/spiral_ccw-grad-512.png",
 };
 
 class SourceSelector extends React.Component<Props, State> {
