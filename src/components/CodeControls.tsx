@@ -73,11 +73,11 @@ class CodeControls extends React.Component<Props> {
         return (
             <div className="controls">
                 <div className="controls-top">
-                    <div className="controls-bar">
+                    <label className="controls-bar">
                         <div className="controls-label">Run</div>
                         <input type="checkbox" className="controls-toggle control"
                             checked={this.props.control.shouldEval} onChange={this.handleCheckboxChange}/>
-                    </div>
+                    </label>
                     <div className="controls-bar controls-info"> instance name: `{getUserInstanceName()}`</div>
                     <div className="controls-bar controls-info"> {this.props.control.errorText} </div>
                 </div>

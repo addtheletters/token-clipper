@@ -118,11 +118,11 @@ class ImageControls extends React.Component<Props> {
                    <SourceSelector onSourceChange={this.handleSourceChange} parentEffectType={this.props.parentEffectType}/>
                 </div>
                 <div className="controls-bottom">
-                    <div className="controls-bar">
+                    <label className="controls-bar">
                         <div className="controls-label">{invert_text}</div>
                         <input type="checkbox" className="controls-toggle control"
                             checked={this.props.control.invert} onChange={this.handleCheckboxChange}/>
-                    </div>
+                    </label>
                     <ControlSlider label="X offset" name="xoffset" value={this.props.control.xoffset}
                         onChange={this.handleSliderChange} min={-1} max={1} units="x"/>
                     <ControlSlider label="Y offset" name="yoffset" value={this.props.control.yoffset}

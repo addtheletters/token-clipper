@@ -66,11 +66,11 @@ table {
 }
 
 .list-side-spacer {
-  flex: 0 10 24%;
+  flex: 0 10 5%;
 }
 
 .effect-list {
-  flex: 1;
+  flex: 1 0 initial;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;

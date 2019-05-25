@@ -29,13 +29,13 @@ const ControlSlider: React.FC<SliderProps> = (props:SliderProps) => {
         units_div = <div className="controls-units">{props.units ? props.units : ""}</div>;
     }
     return (
-        <div className="controls-bar">
+        <label className="controls-bar">
             <div className="controls-label">{props.label}</div>
             <div className="controls-label">{props.value.toFixed(2)}</div>
             {units_div}
             <input type="range" name={props.name} value={scaled_value} className="control"
                 min={0} max={INCS} onChange={handleIncrementChange(props.onChange, props.min, props.max)}/>
-        </div>
+        </label>
     );
 }
 

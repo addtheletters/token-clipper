@@ -177,11 +177,11 @@ class TransformControls extends React.Component<Props> {
         return (
             <div className="controls">
                 <div className="controls-top">
-                    <div className="controls-bar">
+                    <label className="controls-bar">
                         <div className="controls-label">Custom Matrix</div>
                         <input type="checkbox" className="controls-toggle control"
                             checked={this.props.control.useMatrix} onChange={this.handleCheckboxChange}/>
-                    </div>
+                    </label>
                 </div>
                 <div className="controls-bottom">
                     {bottom_controls}
