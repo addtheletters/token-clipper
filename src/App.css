@@ -47,6 +47,19 @@ canvas {
   background-position:0 0, 10px 0, 10px 10px, 0px 10px; /* Must be half of one side of the square */
 }
 
+input[type=number]{
+  width: 5em;
+  padding: 0.2em;
+}
+
+select {
+  padding: 0.2em;
+}
+
+table {
+  margin: auto;
+}
+
 .list-container {
   display: flex;
   flex-direction: row;
@@ -111,6 +124,8 @@ canvas {
 
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .controls-bottom {
@@ -134,8 +149,9 @@ canvas {
 
 .controls-area {
   flex:15;
-  padding: 1em 1em;
-  min-width: 256px;
+  width: 99%;
+  min-height: 8em;
+  margin: auto;
 }
 
 .controls-bar {
@@ -151,8 +167,8 @@ canvas {
 }
 
 .code-area {
-  width: 80%;
-  height: 95%;
+  width: 99%;
+  height: 99%;
 }
 
 .controls-toggle {
@@ -175,4 +191,9 @@ canvas {
 
 .img-hidden {
   display: none;
+}
+
+.matrix-cell {
+  display: flex;
+  flex-direction: row;
 }

@@ -28,11 +28,11 @@ const MatrixTable: React.FC<MatrixTableProps> = (props:MatrixTableProps) => {
         let ind = row * props.cols + col;
         let label = (null);
         if (props.labels) {
-            label = <div>{props.labels[ind]}</div>
+            label = <div className="controls-label">{props.labels[ind]}</div>
         }
         if (props.showInput && props.showInput[ind]) {
             return (
-                <div>
+                <div className="matrix-cell">
                 {label}
                 <input key={"cell-" + ind} type="number" value={props.values[ind]}
                     onChange={handleCellChange(ind, props.onChange)}/>

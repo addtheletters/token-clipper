@@ -33,12 +33,12 @@ var TransformEffect : Effect = {
             s.translate(s.props.size/2, s.props.size/2);
 
             // apply transform settings
-            s.rotate(s.state.rotate);
-            s.shearX(s.state.shearX);
-            s.shearY(s.state.shearY);
+            s.scale(s.state.scaleX, s.state.scaleY);
             s.translate(s.state.translateX * s.props.size, 
                 s.state.translateY * s.props.size);
-            s.scale(s.state.scaleX, s.state.scaleY);
+            s.shearX(s.state.shearX);
+            s.shearY(s.state.shearY);
+            s.rotate(s.state.rotate);
 
             // draw pixels around center
             s.image(s.baseImg, -s.props.size/2, -s.props.size/2);
