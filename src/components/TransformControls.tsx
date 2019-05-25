@@ -133,8 +133,6 @@ class TransformControls extends React.Component<Props> {
     };
 
     handleMatrixChange = (ind : number, val : string) => {
-        //this.props.handlers.onInputMatrixChange([1, 0, 0, 1, 0, 0]);
-
         let newMatrix = Array.from(this.props.control.matrix);
         newMatrix[ind] = parseFloat(val);
         let newView = Array.from(this.props.control.viewMatrix);
@@ -142,6 +140,19 @@ class TransformControls extends React.Component<Props> {
         this.props.handlers.onViewMatrixChange(newView);
         this.props.handlers.onInputMatrixChange(newMatrix);
     };
+
+    handleResetPressed = () => {
+        this.props.handlers.onSliderChange("translateX", 0);
+        this.props.handlers.onSliderChange("translateY", 0);
+        this.props.handlers.onSliderChange("scaleX", 1);
+        this.props.handlers.onSliderChange("scaleY", 1);
+        this.props.handlers.onSliderChange("rotate", 0);
+        this.props.handlers.onSliderChange("shearX", 0);
+        this.props.handlers.onSliderChange("shearY", 0);
+
+        this.props.handlers.onInputMatrixChange([1, 0, 0, 0, 1, 0]);
+        this.props.handlers.onViewMatrixChange(["1", "0", "0", "0", "1", "0"]);
+    }
 
     render() {
         let bottom_controls = {};
@@ -184,6 +195,7 @@ class TransformControls extends React.Component<Props> {
                 </div>
                 <div className="controls-bottom">
                     {bottom_controls}
+                    <button className="controls-bar" onClick={this.handleResetPressed}>Reset</button>
                 </div>
             </div>
         );

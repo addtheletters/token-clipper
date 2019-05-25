@@ -133,7 +133,7 @@ var ImageEffect : Effect = {
         }
         if (delt) {
             layer.setState({
-                scale: s.state.scale + makeScrollSane(delt, ZOOM_SCROLL_SPEED),
+                scale: s.state.scale - makeScrollSane(delt, ZOOM_SCROLL_SPEED),
             });
         }
     },

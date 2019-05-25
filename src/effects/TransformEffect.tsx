@@ -85,8 +85,8 @@ var TransformEffect : Effect = {
             }
             else {
                 layer.setState({
-                    scaleX: s.state.scaleX + makeScrollSane(delt, SCALE_SCROLL_SPEED),
-                    scaleY: s.state.scaleX + makeScrollSane(delt, SCALE_SCROLL_SPEED),
+                    scaleX: s.state.scaleX - makeScrollSane(delt, SCALE_SCROLL_SPEED),
+                    scaleY: s.state.scaleX - makeScrollSane(delt, SCALE_SCROLL_SPEED),
                 });
             }
         }
