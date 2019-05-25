@@ -6,6 +6,8 @@ import ImageEffect from './ImageEffect';
 var MaskEffect : Effect = {
     name : "Mask",
     control : ImageControls.controlFuncs,
+    mouseDragged : ImageEffect.mouseDragged,
+    mouseWheel : ImageEffect.mouseWheel,
 
     preLoad : (s:Sketcher) => {
         s.internal.mask = s.createImage(s.props.size, s.props.size);

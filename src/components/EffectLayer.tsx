@@ -99,6 +99,7 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
                 let mev = event as MouseEvent;
                 // allow effect to do something with mouse event
                 effect.mouseDragged(s, mev, parent);
+                mev.preventDefault();
             }
         }
 
@@ -109,6 +110,7 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             if (effect.mouseWheel) {
                 let wev = event as WheelEvent;
                 effect.mouseWheel(s, wev, parent);
+                wev.preventDefault();
             }
         }
     };

@@ -105,7 +105,6 @@ var ImageEffect : Effect = {
             layer.setState({
                 scale: s.state.scale + delt * ZOOM_SCROLL_SPEED,
             });
-            wev.stopPropagation();
         }
     },
 }
