@@ -142,16 +142,19 @@ class TransformControls extends React.Component<Props> {
     };
 
     handleResetPressed = () => {
-        this.props.handlers.onSliderChange("translateX", 0);
-        this.props.handlers.onSliderChange("translateY", 0);
-        this.props.handlers.onSliderChange("scaleX", 1);
-        this.props.handlers.onSliderChange("scaleY", 1);
-        this.props.handlers.onSliderChange("rotate", 0);
-        this.props.handlers.onSliderChange("shearX", 0);
-        this.props.handlers.onSliderChange("shearY", 0);
-
-        this.props.handlers.onInputMatrixChange([1, 0, 0, 0, 1, 0]);
-        this.props.handlers.onViewMatrixChange(["1", "0", "0", "0", "1", "0"]);
+        if (this.props.control.useMatrix) {
+            this.props.handlers.onInputMatrixChange([1, 0, 0, 0, 1, 0]);
+            this.props.handlers.onViewMatrixChange(["1", "0", "0", "0", "1", "0"]);
+        }
+        else {
+            this.props.handlers.onSliderChange("translateX", 0);
+            this.props.handlers.onSliderChange("translateY", 0);
+            this.props.handlers.onSliderChange("scaleX", 1);
+            this.props.handlers.onSliderChange("scaleY", 1);
+            this.props.handlers.onSliderChange("rotate", 0);
+            this.props.handlers.onSliderChange("shearX", 0);
+            this.props.handlers.onSliderChange("shearY", 0);
+        }
     }
 
     render() {
