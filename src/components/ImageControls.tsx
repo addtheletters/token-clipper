@@ -129,6 +129,12 @@ class ImageControls extends React.Component<Props> {
         this.props.handlers.onBlendModeChange(event.target.value as p5.BLEND_MODE);
     }
 
+    handleResetPress = () => {
+        this.props.handlers.onSliderChange("xoffset", 0);
+        this.props.handlers.onSliderChange("yoffset", 0);
+        this.props.handlers.onSliderChange("scale", 1);
+    };
+
     render() {
         let invert_text : string = "Invert";
         switch (this.props.parentEffectType) {
@@ -176,6 +182,7 @@ class ImageControls extends React.Component<Props> {
                         onChange={this.handleSliderChange} min={-1} max={1} units="x"/>
                     <ControlSlider label="Scale" name="scale" value={this.props.control.scale}
                         onChange={this.handleSliderChange} min={0.0001} max={MAX_SCALE} units="x"/>
+                    <button onClick={this.handleResetPress}>Reset</button>
                 </div>
             </div>
         );
