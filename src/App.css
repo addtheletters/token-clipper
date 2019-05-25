@@ -172,6 +172,7 @@ table {
 
 .control {
   flex: 2;
+  margin: 0.5em 1em;
 }
 
 .code-area {

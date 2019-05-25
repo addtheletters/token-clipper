@@ -22,6 +22,15 @@ function handleIncrementChange(
     };
 }
 
+function handleNumberChange(
+        onValueChange : (s: string, v: number) => void,
+    ) {
+    return function(event: React.ChangeEvent<HTMLInputElement>) {
+        let inputted = parseFloat(event.target.value);
+        return onValueChange(event.target.name, inputted);
+    }
+}
+
 const ControlSlider: React.FC<SliderProps> = (props:SliderProps) => {
     let scaled_value = INCS * (props.value - props.min) / (props.max - props.min);
     let units_div = (null);
@@ -31,7 +40,8 @@ const ControlSlider: React.FC<SliderProps> = (props:SliderProps) => {
     return (
         <label className="controls-bar">
             <div className="controls-label">{props.label}</div>
-            <div className="controls-label">{props.value.toFixed(2)}</div>
+            <input type="number" name={props.name} className="controls-label" value={props.value}
+                onChange={handleNumberChange(props.onChange)}/>
             {units_div}
             <input type="range" name={props.name} value={scaled_value} className="control"
                 min={0} max={INCS} onChange={handleIncrementChange(props.onChange, props.min, props.max)}/>
