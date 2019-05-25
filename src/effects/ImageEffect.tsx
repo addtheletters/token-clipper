@@ -1,5 +1,5 @@
 import {Effect} from './Effect';
-import {Sketcher} from '../components/EffectLayer';
+import EffectLayer, {Sketcher} from '../components/EffectLayer';
 import ImageControls from '../components/ImageControls';
 
 const ALT_TEXT = "load failed\n"
@@ -7,6 +7,8 @@ const ALT_TEXT = "load failed\n"
 
 // server that can apply the Access-Control-Allow-Origin header
 const CORS_PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+
+const ZOOM_SCROLL_SPEED = 0.05;
 
 // Image Effect.
 // Draws an image to the canvas.
@@ -82,6 +84,28 @@ var ImageEffect : Effect = {
         if (s.state.invert) {
             // inverted. image drawn behind, now draw base in front
             s.image(s.baseImg, 0, 0);
+        }
+    },
+
+    mouseDragged : (s: Sketcher, mev: MouseEvent, layer:EffectLayer) => {
+        layer.setState({ 
+            xoffset: s.state.xoffset + mev.movementX / s.props.size,
+            yoffset: s.state.yoffset + mev.movementY / s.props.size,
+        });
+        return;
+    },
+
+    mouseWheel : (s:Sketcher, wev:WheelEvent, layer:EffectLayer) => {
+        console.log(wev);
+        let delt = (wev as any).delta;
+        if (!delt) {
+            delt = wev.deltaY;
+        }
+        if (delt) {
+            layer.setState({
+                scale: s.state.scale + delt * ZOOM_SCROLL_SPEED,
+            });
+            wev.stopPropagation();
         }
     },
 }

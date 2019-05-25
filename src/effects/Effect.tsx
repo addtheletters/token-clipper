@@ -18,11 +18,13 @@ export interface ControlComponent {
 }
 
 export interface Effect {
-    name : string;
-    control : ControlComponent; // ControlComponent, but static interfaces don't exist
-    preLoad : (s:Sketcher, layer:EffectLayer) => void; // one-time initialization
-    preDraw : (s:Sketcher) => void; // prepare to draw; usually clear canvas
-    draw : (s:Sketcher) => void;    // draw the effect to the canvas
+    name: string;
+    control: ControlComponent; // ControlComponent, but static interfaces don't exist
+    preLoad: (s:Sketcher, layer:EffectLayer) => void; // one-time initialization
+    preDraw: (s:Sketcher) => void; // prepare to draw; usually clear canvas
+    draw: (s:Sketcher) => void;    // draw the effect to the canvas
+    mouseDragged?: (s:Sketcher, mev:MouseEvent, layer:EffectLayer) => void; // handle mouse drag
+    mouseWheel?: (s:Sketcher, wev:WheelEvent, layer:EffectLayer) => void; // handle mousewheel
 }
 
 export function getEffect(et : EffectType) {

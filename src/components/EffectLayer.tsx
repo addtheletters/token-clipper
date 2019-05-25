@@ -86,6 +86,31 @@ function getSketcher(parent : EffectLayer, effect : Effect) {
             s.loadPixels();
             parent.onOutput(Uint8ClampedArray.from(s.pixels));
         }
+
+        function mouseInBounds() {
+            return s.mouseX > 0 && s.mouseY > 0 && s.mouseX < s.props.size && s.mouseY < s.props.size;
+        }
+
+        s.mouseDragged = function(event: object) {
+            if (!mouseInBounds()) {
+                return; // mouse was not on this canvas
+            }
+            if (effect.mouseDragged) {
+                let mev = event as MouseEvent;
+                // allow effect to do something with mouse event
+                effect.mouseDragged(s, mev, parent);
+            }
+        }
+
+        s.mouseWheel = function(event: object) {
+            if (!mouseInBounds()) {
+                return;
+            }
+            if (effect.mouseWheel) {
+                let wev = event as WheelEvent;
+                effect.mouseWheel(s, wev, parent);
+            }
+        }
     };
     return sketcher;
 }
