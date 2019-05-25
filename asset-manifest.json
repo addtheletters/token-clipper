@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/token-clipper/static/css/main.7d580952.chunk.css",
-    "main.js": "/token-clipper/static/js/main.1e54d6f0.chunk.js",
-    "main.js.map": "/token-clipper/static/js/main.1e54d6f0.chunk.js.map",
+    "main.js": "/token-clipper/static/js/main.5eadb87e.chunk.js",
+    "main.js.map": "/token-clipper/static/js/main.5eadb87e.chunk.js.map",
     "runtime~main.js": "/token-clipper/static/js/runtime~main.1aafd3b3.js",
     "runtime~main.js.map": "/token-clipper/static/js/runtime~main.1aafd3b3.js.map",
     "static/js/2.1fccb98a.chunk.js": "/token-clipper/static/js/2.1fccb98a.chunk.js",
     "static/js/2.1fccb98a.chunk.js.map": "/token-clipper/static/js/2.1fccb98a.chunk.js.map",
     "index.html": "/token-clipper/index.html",
-    "precache-manifest.bbf5b0dff630c75639f177d028850c1c.js": "/token-clipper/precache-manifest.bbf5b0dff630c75639f177d028850c1c.js",
+    "precache-manifest.13cb5d2c34cd7acead370ae274119831.js": "/token-clipper/precache-manifest.13cb5d2c34cd7acead370ae274119831.js",
     "service-worker.js": "/token-clipper/service-worker.js",
     "static/css/main.7d580952.chunk.css.map": "/token-clipper/static/css/main.7d580952.chunk.css.map"
   }
