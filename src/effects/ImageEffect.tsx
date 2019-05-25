@@ -86,21 +86,17 @@ var ImageEffect : Effect = {
             drawImg(firstImg);
 
             // set blend mode
-            if (s.state.blendmode) {
-                s.blendMode(s.state.blendmode);
+            if (s.state.blendMode) {
+                try {
+                    s.blendMode(s.state.blendMode);
+                }
+                catch (err) {
+                    console.error("Could not switch to blend mode " + s.state.blendMode);
+                    console.error(err);
+                }
             }
 
             drawImg(secondImg);
-
-            //if (s.state.blendMode) {
-            // s.blend(s.internal.img, 
-            //     0, 0, imgw, imgh,
-            //     (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
-            //     (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
-            //     s.state.scale * imgw,
-            //     s.state.scale * imgh,
-            //     s.DIFFERENCE);
-            //}
         }
         else {
             // draw base pixels

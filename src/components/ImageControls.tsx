@@ -15,12 +15,14 @@ export interface ImageControlState {
 
     src?: string;
     invert : boolean;
+    blendMode : p5.BLEND_MODE;
 }
 
 export interface ImageControlHandlers {
     onSliderChange: (name:string, value:number) => void;
     onInvertChange: (value:boolean) => void;
     onSourceChange: (url:string) => void;
+    onBlendModeChange: (mode:p5.BLEND_MODE) => void;
 }
 
 interface Props {
@@ -28,6 +30,24 @@ interface Props {
     handlers : ImageControlHandlers,
 
     parentEffectType ?: EffectType;
+}
+
+enum BLEND_MODE {
+    BLEND = "source-over",
+    //DARKEST = "darkest", // not recognized
+    LIGHTEST = "lighten",
+    DIFFERENCE = "difference",
+    MULTIPLY = "multiply",
+    EXCLUSION = "exclusion",
+    SCREEN = "screen",
+    REPLACE = "copy",
+    OVERLAY = "overlay",
+    HARD_LIGHT = "hard-light",
+    SOFT_LIGHT = "soft-light",
+    DODGE = "color-dodge",
+    BURN = "color-burn",
+    ADD = "lighter",
+    NORMAL = "normal",
 }
 
 class ImageControls extends React.Component<Props> {
@@ -46,6 +66,7 @@ class ImageControls extends React.Component<Props> {
             scale : 1,
 
             invert : false,
+            blendMode : "source-over", // BLEND
         };
         return state;
     };
@@ -73,7 +94,11 @@ class ImageControls extends React.Component<Props> {
 
             onSourceChange: (url: string) => {
                 el.setState({ src:url });
-            }
+            },
+
+            onBlendModeChange: (mode: p5.BLEND_MODE) => {
+                el.setState({ blendMode:mode });
+            },
         }
         return handlers;
     };
@@ -86,6 +111,7 @@ class ImageControls extends React.Component<Props> {
 
             src: el.state.src,
             invert: el.state.invert,
+            blendMode: el.state.blendMode,
         }
         return ctrl;
     };
@@ -100,6 +126,10 @@ class ImageControls extends React.Component<Props> {
 
     handleSourceChange = this.props.handlers.onSourceChange;
 
+    handleBlendModeChange = (event : React.ChangeEvent<HTMLSelectElement>) => {
+        this.props.handlers.onBlendModeChange(event.target.value as p5.BLEND_MODE);
+    }
+
     render() {
         let invert_text : string = "Invert";
         switch (this.props.parentEffectType) {
@@ -112,10 +142,23 @@ class ImageControls extends React.Component<Props> {
             default:
                 break;
         }
+
+        let blend_options = Object.keys(BLEND_MODE).map(k => {
+            let t = BLEND_MODE[k as any];
+            return (<option value={t} key={k}>{k}</option>);
+        });
+
         return (
             <div className="controls">
                 <div className="controls-top">
                    <SourceSelector onSourceChange={this.handleSourceChange} parentEffectType={this.props.parentEffectType}/>
+                   <label className="controls-bar">
+                       <div className="controls-label">Blend Mode</div>
+                       <select className="controls-select" value={this.props.control.blendMode}
+                           onChange={this.handleBlendModeChange}>
+                           {blend_options}
+                       </select>
+                   </label>
                 </div>
                 <div className="controls-bottom">
                     <label className="controls-bar">
