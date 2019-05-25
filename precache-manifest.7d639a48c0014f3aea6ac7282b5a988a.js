@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "666412ef1998834ac406b566147f788c",
+    "revision": "eac1ac0362c4326b772ec303284264a2",
     "url": "/token-clipper/index.html"
   },
   {
-    "revision": "2390a0705345c5d0db6b",
-    "url": "/token-clipper/static/css/main.3676a5c5.chunk.css"
+    "revision": "2b499c11233c3131751d",
+    "url": "/token-clipper/static/css/main.02ff8cb5.chunk.css"
   },
   {
     "revision": "08e6dcb1f224a455d76e",
     "url": "/token-clipper/static/js/2.1fccb98a.chunk.js"
   },
   {
-    "revision": "2390a0705345c5d0db6b",
-    "url": "/token-clipper/static/js/main.c1586037.chunk.js"
+    "revision": "2b499c11233c3131751d",
+    "url": "/token-clipper/static/js/main.fbdc8981.chunk.js"
   },
   {
     "revision": "1b1b62d88d1898130d60",
