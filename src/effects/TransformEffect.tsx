@@ -50,6 +50,10 @@ var TransformEffect : Effect = {
     },
 
     mouseDragged : (s: Sketcher, mev: MouseEvent, layer:EffectLayer) => {
+        if (s.state.useMatrix) {
+            return;
+        }
+
         let move = extractPointerMove(s, mev);
         if (move) {
             layer.setState({
@@ -61,6 +65,10 @@ var TransformEffect : Effect = {
     },
 
     mouseWheel : (s:Sketcher, wev:WheelEvent, layer:EffectLayer) => {
+        if (s.state.useMatrix) {
+            return;
+        }
+
         let delt = (wev as any).delta;
         if (!delt) {
             delt = wev.deltaY;

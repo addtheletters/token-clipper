@@ -177,10 +177,10 @@ class TransformControls extends React.Component<Props> {
         }
         else {
             bottom_controls = (<div>
-                <ControlSlider label="translate X" name="translateX" value={this.props.control.translateX} onChange={this.handleSliderChange} min={-2} max={2} units="x"/>
-                <ControlSlider label="translate Y" name="translateY" value={this.props.control.translateY} onChange={this.handleSliderChange} min={-2} max={2} units="x"/>
                 <ControlSlider label="scale X" name="scaleX" value={this.props.control.scaleX} onChange={this.handleSliderChange} min={-5} max={5} units="x"/>
                 <ControlSlider label="scale Y" name="scaleY" value={this.props.control.scaleY} onChange={this.handleSliderChange} min={-5} max={5} units="x"/>
+                <ControlSlider label="translate X" name="translateX" value={this.props.control.translateX} onChange={this.handleSliderChange} min={-2} max={2} units="x"/>
+                <ControlSlider label="translate Y" name="translateY" value={this.props.control.translateY} onChange={this.handleSliderChange} min={-2} max={2} units="x"/>
                 <ControlSlider label="shear X" name="shearX" value={this.props.control.shearX} onChange={this.handleSliderChange} min={-Math.PI/2} max={Math.PI/2} units="rad"/>
                 <ControlSlider label="shear Y" name="shearY" value={this.props.control.shearY} onChange={this.handleSliderChange} min={-Math.PI/2} max={Math.PI/2} units="rad"/>
                 <ControlSlider label="rotate" name="rotate" value={this.props.control.rotate} onChange={this.handleSliderChange} min={-Math.PI} max={Math.PI} units="rad"/>
