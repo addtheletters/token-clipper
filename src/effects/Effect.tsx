@@ -4,6 +4,8 @@ import MaskEffect from './MaskEffect';
 import CodeEffect from './CodeEffect';
 import TransformEffect from './TransformEffect';
 
+const SCROLL_SANITY_BOUND = 100;
+
 export enum EffectType {
     Image = "image",
     Mask = "mask",
@@ -41,4 +43,27 @@ export function getEffect(et : EffectType) {
             console.warn("tried to get unknown effect " + et + ": defaulting to ImageEffect");
             return ImageEffect;
     }
+}
+
+export function makeScrollSane(delta: number, scrollScale: number) {
+    if (delta >= SCROLL_SANITY_BOUND) {
+        return Math.log10(delta) * scrollScale;
+    }
+    if (delta <= -SCROLL_SANITY_BOUND) {
+        return -1 * Math.log10(-delta) * scrollScale;
+    }
+    return delta * scrollScale;
+}
+
+export function extractPointerMove(s:Sketcher, mev: MouseEvent) {
+    let move = null;
+    if (mev.movementX || mev.movementY ||
+            (mev.movementX === 0 && mev.movementY === 0)) {
+        move = [mev.movementX, mev.movementY];
+    }
+    else if (s.mouseX || s.mouseY || s.pmouseX || s.pmouseY ||
+            (s.mouseX === 0 && s.mouseY === 0 && s.pmouseX === 0 && s.pmouseY === 0)) {
+        move = [s.mouseX - s.pmouseX, s.mouseY - s.pmouseY];
+    }
+    return move;
 }

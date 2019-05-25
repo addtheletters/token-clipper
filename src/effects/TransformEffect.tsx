@@ -1,4 +1,4 @@
-import {Effect} from './Effect';
+import {Effect, makeScrollSane, extractPointerMove} from './Effect';
 import EffectLayer, {Sketcher} from '../components/EffectLayer';
 import TransformControls from '../components/TransformControls';
 
@@ -50,10 +50,13 @@ var TransformEffect : Effect = {
     },
 
     mouseDragged : (s: Sketcher, mev: MouseEvent, layer:EffectLayer) => {
-        layer.setState({
-            translateX: s.state.translateX + mev.movementX / s.props.size,
-            translateY: s.state.translateY + mev.movementY / s.props.size,
-        });
+        let move = extractPointerMove(s, mev);
+        if (move) {
+            layer.setState({
+                translateX: s.state.translateX + move[0] / s.props.size,
+                translateY: s.state.translateY + move[1] / s.props.size,
+            });
+        }
         return;
     },
 
@@ -65,25 +68,25 @@ var TransformEffect : Effect = {
         if (wev.deltaX) {
             if (wev.altKey) {
                 layer.setState({
-                    shearY: s.state.shearY + wev.deltaX * SHEAR_SCROLL_SPEED,
+                    shearY: s.state.shearY + makeScrollSane(wev.deltaX, SHEAR_SCROLL_SPEED),
                 }); 
             }
             else {
                 layer.setState({
-                    shearX: s.state.shearX + wev.deltaX * SHEAR_SCROLL_SPEED,
+                    shearX: s.state.shearX + makeScrollSane(wev.deltaX, SHEAR_SCROLL_SPEED),
                 });
             }
         }
         else if (delt) {
             if (wev.altKey) {
                 layer.setState({
-                    rotate: s.state.rotate + delt * ROTATE_SCROLL_SPEED,
+                    rotate: s.state.rotate + makeScrollSane(delt, ROTATE_SCROLL_SPEED),
                 });
             }
             else {
                 layer.setState({
-                    scaleX: s.state.scaleX + delt * SCALE_SCROLL_SPEED,
-                    scaleY: s.state.scaleX + delt * SCALE_SCROLL_SPEED,
+                    scaleX: s.state.scaleX + makeScrollSane(delt, SCALE_SCROLL_SPEED),
+                    scaleY: s.state.scaleX + makeScrollSane(delt, SCALE_SCROLL_SPEED),
                 });
             }
         }

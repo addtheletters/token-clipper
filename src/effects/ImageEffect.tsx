@@ -1,4 +1,4 @@
-import {Effect} from './Effect';
+import {Effect, makeScrollSane, extractPointerMove} from './Effect';
 import EffectLayer, {Sketcher} from '../components/EffectLayer';
 import ImageControls from '../components/ImageControls';
 
@@ -88,10 +88,13 @@ var ImageEffect : Effect = {
     },
 
     mouseDragged : (s: Sketcher, mev: MouseEvent, layer:EffectLayer) => {
-        layer.setState({ 
-            xoffset: s.state.xoffset + mev.movementX / s.props.size,
-            yoffset: s.state.yoffset + mev.movementY / s.props.size,
-        });
+        let move = extractPointerMove(s, mev);
+        if (move) {
+            layer.setState({
+                xoffset: s.state.xoffset + move[0] / s.props.size,
+                yoffset: s.state.yoffset + move[1] / s.props.size,
+            });
+        }
         return;
     },
 
@@ -102,7 +105,7 @@ var ImageEffect : Effect = {
         }
         if (delt) {
             layer.setState({
-                scale: s.state.scale + delt * ZOOM_SCROLL_SPEED,
+                scale: s.state.scale + makeScrollSane(delt, ZOOM_SCROLL_SPEED),
             });
         }
     },
