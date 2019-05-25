@@ -86,11 +86,12 @@ var ImageEffect : Effect = {
             drawImg(firstImg);
 
             // set blend mode
-            if (s.state.blendMode) {
+            if (s.state.blendMode && s.state.blendMode !== s.internal.badMode) {
                 try {
                     s.blendMode(s.state.blendMode);
                 }
                 catch (err) {
+                    s.internal.badMode = s.state.blendMode
                     console.error("Could not switch to blend mode " + s.state.blendMode);
                     console.error(err);
                 }

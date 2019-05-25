@@ -47,7 +47,6 @@ enum BLEND_MODE {
     DODGE = "color-dodge",
     BURN = "color-burn",
     ADD = "lighter",
-    NORMAL = "normal",
 }
 
 class ImageControls extends React.Component<Props> {
@@ -148,17 +147,22 @@ class ImageControls extends React.Component<Props> {
             return (<option value={t} key={k}>{k}</option>);
         });
 
+        let blend_select = (null);
+        if (this.props.parentEffectType === EffectType.Image) {
+            blend_select = (<label className="controls-bar">
+               <div className="controls-label">Blend Mode</div>
+               <select className="controls-select" value={this.props.control.blendMode}
+                   onChange={this.handleBlendModeChange}>
+                   {blend_options}
+               </select>
+            </label>);
+        }
+
         return (
             <div className="controls">
                 <div className="controls-top">
                    <SourceSelector onSourceChange={this.handleSourceChange} parentEffectType={this.props.parentEffectType}/>
-                   <label className="controls-bar">
-                       <div className="controls-label">Blend Mode</div>
-                       <select className="controls-select" value={this.props.control.blendMode}
-                           onChange={this.handleBlendModeChange}>
-                           {blend_options}
-                       </select>
-                   </label>
+                   {blend_select}
                 </div>
                 <div className="controls-bottom">
                     <label className="controls-bar">
