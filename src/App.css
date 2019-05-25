@@ -107,7 +107,7 @@ table {
 }
 
 .controls {
-  flex: 2;
+  flex: 2 3 content;
   align-self: center;
 
   display: flex;
@@ -120,7 +120,7 @@ table {
 
 .controls-top {
   flex:1 1;
-  padding: 1em 1em 0.5em 1em;
+  padding: 0.3em 0.3em 0.1em 0.3em;
 
   display: flex;
   flex-direction: column;
@@ -130,7 +130,7 @@ table {
 
 .controls-bottom {
   flex:2 2;
-  padding: 0.5em 1em 1em 1em;
+  padding: 0.1em 0.3em 0.3em 0.3em;
 
   display: flex;
   flex-direction: column;
@@ -182,11 +182,13 @@ table {
 }
 
 .source-select-type {
-  padding: 0px 1em;
+  padding: 0px 0.1em;
+  flex: 1 1;
 }
 
 .source-select-sub {
-  padding: 0px 1em;
+  padding: 0px 0.1em;
+  flex: 1 1;
 }
 
 .img-hidden {
