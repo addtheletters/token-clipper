@@ -96,7 +96,6 @@ var ImageEffect : Effect = {
     },
 
     mouseWheel : (s:Sketcher, wev:WheelEvent, layer:EffectLayer) => {
-        console.log(wev);
         let delt = (wev as any).delta;
         if (!delt) {
             delt = wev.deltaY;

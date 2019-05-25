@@ -1,6 +1,10 @@
 import {Effect} from './Effect';
-import {Sketcher} from '../components/EffectLayer';
+import EffectLayer, {Sketcher} from '../components/EffectLayer';
 import TransformControls from '../components/TransformControls';
+
+const SCALE_SCROLL_SPEED = 0.05;
+const SHEAR_SCROLL_SPEED = -0.05;
+const ROTATE_SCROLL_SPEED = -0.025;
 
 // Transform Effect.
 // Transforms according to controls, or applies a transformation matrix.
@@ -42,6 +46,46 @@ var TransformEffect : Effect = {
 
             // draw pixels around center
             s.image(s.baseImg, -s.props.size/2, -s.props.size/2);
+        }
+    },
+
+    mouseDragged : (s: Sketcher, mev: MouseEvent, layer:EffectLayer) => {
+        layer.setState({
+            translateX: s.state.translateX + mev.movementX / s.props.size,
+            translateY: s.state.translateY + mev.movementY / s.props.size,
+        });
+        return;
+    },
+
+    mouseWheel : (s:Sketcher, wev:WheelEvent, layer:EffectLayer) => {
+        let delt = (wev as any).delta;
+        if (!delt) {
+            delt = wev.deltaY;
+        }
+        if (wev.deltaX) {
+            if (wev.altKey) {
+                layer.setState({
+                    shearY: s.state.shearY + wev.deltaX * SHEAR_SCROLL_SPEED,
+                }); 
+            }
+            else {
+                layer.setState({
+                    shearX: s.state.shearX + wev.deltaX * SHEAR_SCROLL_SPEED,
+                });
+            }
+        }
+        else if (delt) {
+            if (wev.altKey) {
+                layer.setState({
+                    rotate: s.state.rotate + delt * ROTATE_SCROLL_SPEED,
+                });
+            }
+            else {
+                layer.setState({
+                    scaleX: s.state.scaleX + delt * SCALE_SCROLL_SPEED,
+                    scaleY: s.state.scaleX + delt * SCALE_SCROLL_SPEED,
+                });
+            }
         }
     },
 };
