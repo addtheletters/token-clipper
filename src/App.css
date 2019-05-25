@@ -70,7 +70,7 @@ table {
 }
 
 .effect-list {
-  flex: 1 0 initial;
+  flex: 1 0 none;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
@@ -87,22 +87,20 @@ table {
   align-items: center;
   justify-content: center;
   background-color: rgba(240, 240, 240, 1);
-  padding: 1em;
+  padding: 0.3em;
   margin: 0.5em auto;
   width: 99%;
   box-shadow: 1px 1px 4px 1px gray;
 }
 
 .effect-left-unit {
-  flex: 1 1 initial;
-  flex-grow: 1;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
 .effect-title {
-  flex: 0;
+  flex-grow: 1;
   font-weight: bold;
   font-size: calc(18px + 0.15vmin);
   padding: 0.3em;
@@ -145,7 +143,7 @@ table {
 }
 
 .controls-label {
-  flex:1;
+  flex:1 1 auto;
   text-align: right;
   padding: 0.3em;
 }
@@ -168,11 +166,25 @@ table {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+.controls-units {
+  flex: 0.3, 0.3;
 }
 
 .control {
-  flex: 2;
-  margin: 0.5em 1em;
+  flex: 1 1 auto;
+  margin: 0.4em;
+  font-size: calc(10px + 0.5vmin);
+}
+
+.control-number {
+  flex: 0 1 auto;
+}
+
+.control-slider {
+  flex: 0 1 auto;
 }
 
 .code-area {
@@ -184,19 +196,11 @@ table {
   flex:1;
 }
 
-.source-select {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
 .source-select-type {
-  padding: 0px 0.1em;
   flex: 1 1;
 }
 
 .source-select-sub {
-  padding: 0px 0.1em;
   flex: 1 1;
 }
 

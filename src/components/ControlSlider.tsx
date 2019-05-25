@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const INCS = 200;  // number of increments for slider
+const INCS = 1000;  // number of increments for slider
 
 interface SliderProps {
     label: string;
@@ -38,14 +38,14 @@ const ControlSlider: React.FC<SliderProps> = (props:SliderProps) => {
         units_div = <div className="controls-units">{props.units ? props.units : ""}</div>;
     }
     return (
-        <label className="controls-bar">
+        <div className="controls-bar">
             <div className="controls-label">{props.label}</div>
-            <input type="number" name={props.name} className="controls-label" value={props.value}
-                onChange={handleNumberChange(props.onChange)}/>
+            <input type="number" name={props.name} className="control control-number" value={props.value}
+                onChange={handleNumberChange(props.onChange)} step="any"/>
             {units_div}
-            <input type="range" name={props.name} value={scaled_value} className="control"
+            <input type="range" name={props.name} value={scaled_value} className="control control-slider"
                 min={0} max={INCS} onChange={handleIncrementChange(props.onChange, props.min, props.max)}/>
-        </label>
+        </div>
     );
 }
 

@@ -154,7 +154,7 @@ class SourceSelector extends React.Component<Props, State> {
         }
 
         return (
-            <div className="source-select">
+            <div className="controls-bar">
                 <div className="source-select-type">
                     <select value={this.state.selectedType} onChange={this.handleSourceTypeChange}>
                         {typeList}
