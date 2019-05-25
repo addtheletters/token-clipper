@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1ef1298ece452049d47482981598a21e",
+    "revision": "666412ef1998834ac406b566147f788c",
     "url": "/token-clipper/index.html"
   },
   {
