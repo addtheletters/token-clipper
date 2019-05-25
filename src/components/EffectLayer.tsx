@@ -219,23 +219,25 @@ class EffectLayer extends React.PureComponent<Props, State> {
 
         return (
             <div className="effect-container" id={"effect-container"+this.props.callbackContainer.key}>
-                <div className="effect-title">
-                    <button className="effect-move-up"
-                        onClick={this.handleMoveUpPressed}
-                        disabled={this.props.isLast}>▲</button>
-                    <hr/>
-                    <div>[{this.props.ind + 1}]</div><div>{this.effect.name}</div>
-                    <button className="effect-save-button"
-                        onClick={this.handleSaveButtonPressed}>save</button>
-                    <button className="effect-remove-button"
-                        onClick={this.handleRemoveButtonPressed}>remove</button>
-                    <hr/>
-                    <button className="effect-move-down"
-                        onClick={this.handleMoveDownPressed}
-                        disabled={this.props.isFirst}>▼</button>
-                </div>
-                <div className="effect-canvas">
-                    <div className="canvas-container" id={this.getCanvasID()}></div>
+                <div className="effect-left-unit">
+                    <div className="effect-title">
+                        <button className="effect-move-up"
+                            onClick={this.handleMoveUpPressed}
+                            disabled={this.props.isLast}>▲</button>
+                        <hr/>
+                        <div>[{this.props.ind + 1}]</div><div>{this.effect.name}</div>
+                        <button className="effect-save-button"
+                            onClick={this.handleSaveButtonPressed}>save</button>
+                        <button className="effect-remove-button"
+                            onClick={this.handleRemoveButtonPressed}>remove</button>
+                        <hr/>
+                        <button className="effect-move-down"
+                            onClick={this.handleMoveDownPressed}
+                            disabled={this.props.isFirst}>▼</button>
+                    </div>
+                    <div className="effect-canvas">
+                        <div className="canvas-container" id={this.getCanvasID()}></div>
+                    </div>
                 </div>
                 {controls}
             </div>

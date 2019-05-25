@@ -134,7 +134,6 @@ class TransformControls extends React.Component<Props> {
 
     handleMatrixChange = (ind : number, val : string) => {
         //this.props.handlers.onInputMatrixChange([1, 0, 0, 1, 0, 0]);
-        console.log("Matrix received change at index " + ind + " : " + val);
 
         let newMatrix = Array.from(this.props.control.matrix);
         newMatrix[ind] = parseFloat(val);
