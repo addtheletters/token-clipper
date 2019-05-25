@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/token-clipper/precache-manifest.59fedf734b0058f54ca39a230ed817ce.js"
+  "/token-clipper/precache-manifest.bbf5b0dff630c75639f177d028850c1c.js"
 );
 
 self.addEventListener('message', (event) => {
