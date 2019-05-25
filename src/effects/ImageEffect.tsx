@@ -50,26 +50,62 @@ var ImageEffect : Effect = {
             });
         }
 
+        // set blend mode to default
+        s.blendMode(s.BLEND);
+
         // clear canvas
         s.clear();
     },
 
     draw : (s : Sketcher) => {
-        if (!s.state.invert) {
-            // draw base pixels to canvas
-            s.image(s.baseImg, 0, 0);
-        }
-
         if (s.internal.img) {
-            // draw image
-            let imgw = s.internal.img.width, imgh = s.internal.img.height;
-            s.image(s.internal.img, 
-                (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
-                (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
-                s.state.scale * imgw,
-                s.state.scale * imgh);
+            let firstImg = s.baseImg;
+            let secondImg = s.internal.img;
+
+            if (s.state.invert) {
+                firstImg = s.internal.img;
+                secondImg = s.baseImg;
+            }
+
+            let drawImg = (img: p5.Image) => {
+                // if the chosen image, apply scale.
+                if (img === s.internal.img) {
+                    let imgw = img.width, imgh = img.height;
+                    s.image(img,
+                        (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
+                        (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
+                        s.state.scale * imgw,
+                        s.state.scale * imgh);
+                }
+                else {
+                    // it's the base image.
+                    s.image(img, 0, 0);
+                }
+            };
+
+            drawImg(firstImg);
+
+            // set blend mode
+            if (s.state.blendmode) {
+                s.blendMode(s.state.blendmode);
+            }
+
+            drawImg(secondImg);
+
+            //if (s.state.blendMode) {
+            // s.blend(s.internal.img, 
+            //     0, 0, imgw, imgh,
+            //     (s.props.size - s.state.scale*imgw)/2 + s.state.xoffset * s.props.size,
+            //     (s.props.size - s.state.scale*imgh)/2 + s.state.yoffset * s.props.size,
+            //     s.state.scale * imgw,
+            //     s.state.scale * imgh,
+            //     s.DIFFERENCE);
+            //}
         }
         else {
+            // draw base pixels
+            s.image(s.baseImg, 0, 0);
+
             // placeholder text since no image is loaded
             s.textSize(s.state.scale * 10);
             s.text("「" + s.internal.text + "\n" +
@@ -79,11 +115,6 @@ var ImageEffect : Effect = {
                 s.props.size/2 + (s.state.xoffset * s.props.size), 
                 s.props.size/2 + (s.state.yoffset * s.props.size), 
                 200, 100);
-        }
-
-        if (s.state.invert) {
-            // inverted. image drawn behind, now draw base in front
-            s.image(s.baseImg, 0, 0);
         }
     },
 
